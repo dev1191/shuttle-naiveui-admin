@@ -1,0 +1,52 @@
+common:
+  403Error: You have not Permission to access
+  404Error: 404 Error
+  404Message: >-
+    Sorry but the page you are looking for does not exist, have been removed.
+    name changed or is temporarily unavailable
+  500Error: 500 Error
+  500Message: >-
+    Something went wrong. Please try again later or contact the administrator if
+    the problem persists.
+  actions: Actions
+  cancel: Cancel
+  confirm: Confirm
+  create: Create
+  currency: USD
+  date: Date
+  day: Day
+  delete: Delete
+  deleteConfirm: Are you sure to delete this item?
+  deletedMessage: Deleted Successfully
+  goHome: Back To Home
+  locale: en-US
+  maintenance: Website in under maintenance
+  maintenanceDetail: >-
+    We are currently performing scheduled maintenance. We will be back online
+    shortly!
+  month: Month
+  name: Name
+  new: New
+  notFound: Not Found
+  oops: Oops Page
+  price: Price
+  search: Search
+  status: Status
+  week: Week
+login:
+  createAccount: Create One!
+  failedMessage: Login Failed
+  forgetPassword: Forget Password
+  haveNotAccount: Don't have an account?
+  loginButton: Login
+  message: Enter your email and password to sign in!
+  password: Password
+  rememberMe: Remember Me
+  skipLogin: Skip Login
+  successMessage: Logged In Successfully 🎉
+  title: Sign In
+  email: Email Address
+  validations:
+    passwordRequired: Password is required
+    emailRequired: Enter email address
+  welcome: Welcome Back!
