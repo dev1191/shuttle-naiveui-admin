@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue';
-import { NSelect, NSpace, NDataTable, NDatePicker } from 'naive-ui';
+import { ref, reactive, watch } from "vue";
+import { NSelect, NSpace, NDataTable, NDatePicker } from "naive-ui";
 
 /** Props */
 interface FilterOption {
@@ -10,7 +10,7 @@ interface FilterOption {
 interface FilterDefinition {
   key: string;
   label: string;
-  type?: 'select' | 'date' | 'date-range';
+  type?: "select" | "date" | "date-range";
   options?: FilterOption[];
 }
 
@@ -29,12 +29,12 @@ const props = defineProps<{
   scrollX?: number;
 }>();
 
-const emit = defineEmits(['update:items']);
+const emit = defineEmits(["update:items"]);
 
 /** State */
 const loading = ref(false);
 const items = ref<any[]>([]);
-const search = ref('');
+const search = ref("");
 const filters = reactive<Record<string, any>>({});
 
 const pagination = reactive({
@@ -43,7 +43,7 @@ const pagination = reactive({
   pageCount: 1,
   itemCount: 0,
   showSizePicker: true,
-  pageSizes: props.pageSizeOptions ?? [10, 20, 30, 50]
+  pageSizes: props.pageSizeOptions ?? [10, 20, 30, 50],
 });
 
 const scrollX = props.scrollX ?? 1000;
@@ -55,8 +55,8 @@ const scrollX = props.scrollX ?? 1000;
 function formatDate(ts: number) {
   const d = new Date(ts);
   const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
 
@@ -68,7 +68,7 @@ function buildParams() {
     page: pagination.page,
     limit: pagination.pageSize,
     search: search.value,
-    ...filters
+    ...filters,
   };
 }
 
@@ -84,9 +84,9 @@ async function loadData() {
     pagination.pageSize = response.limit;
     pagination.itemCount = response.totalRecords;
     pagination.pageCount = response.totalPages;
-    emit('update:items', items.value);
+    emit("update:items", items.value);
   } catch (e) {
-    console.error('DataTableWrapper load error:', e);
+    console.error("DataTableWrapper load error:", e);
   } finally {
     loading.value = false;
   }
@@ -105,14 +105,15 @@ function onFilterChange(filterKey?: string) {
     const [start, end] = filters[filterKey];
 
     if (start && end) {
-      filters[filterKey] = [
-        formatDate(start),
-        formatDate(end)
-      ];
+      filters[filterKey] = [formatDate(start), formatDate(end)];
     }
   }
 
-  if (filterKey && typeof filters[filterKey] === 'number' && filterKey !== 'page') {
+  if (
+    filterKey &&
+    typeof filters[filterKey] === "number" &&
+    filterKey !== "page"
+  ) {
     filters[filterKey] = formatDate(filters[filterKey]);
   }
 
@@ -144,61 +145,57 @@ loadData();
 <template>
   <div>
     <n-space vertical size="large">
+      <!-- Search & Filters Row -->
+      <n-space align="center" justify="space-between" :size="12" wrap>
+        <!-- Search -->
+        <SearchInput v-model="search" @search="onSearch" />
 
-      <!-- Search -->
-      <SearchInput v-model="search" @search="onSearch" />
+        <!-- Dynamic Filters -->
+        <n-space align="center" justify="space-between" :size="12" wrap>
+          <template v-if="extraFilters && extraFilters.length">
+            <template v-for="filter in extraFilters" :key="filter.key">
+              <!-- Select Filter -->
 
-      <!-- Dynamic Filters -->
-      <n-space
-        v-if="extraFilters && extraFilters.length"
-        :wrap="true"
-        :size="12"
-      >
-        <template v-for="filter in extraFilters" :key="filter.key">
+              <n-select
+                v-if="!filter.type || filter.type === 'select'"
+                v-model:value="filters[filter.key]"
+                :placeholder="filter.label"
+                :options="filter.options || []"
+                clearable
+                style="min-width: 150px"
+                @update:value="() => onFilterChange(filter.key)"
+              />
 
-          <!-- Select Filter -->
-          <n-select
-          size="large"
-            v-if="!filter.type || filter.type === 'select'"
-            v-model:value="filters[filter.key]"
-            :placeholder="filter.label"
-            :options="filter.options || []"
-            clearable
-            style="min-width: 150px;"
-            @update:value="() => onFilterChange(filter.key)"
-          />
+              <!-- Single Date -->
+              <n-date-picker
+                v-else-if="filter.type === 'date'"
+                v-model:value="filters[filter.key]"
+                type="date"
+                :placeholder="filter.label"
+                clearable
+                style="min-width: 150px"
+                @update:value="() => onFilterChange(filter.key)"
+              />
 
-          <!-- Single Date -->
-          <n-date-picker
-                  size="large"
-            v-else-if="filter.type === 'date'"
-            v-model:value="filters[filter.key]"
-            type="date"
-            :placeholder="filter.label"
-            clearable
-            style="min-width: 150px;"
-            @update:value="() => onFilterChange(filter.key)"
-          />
-
-          <!-- Date Range -->
-          <n-date-picker
-              size="large"
-            v-else-if="filter.type === 'date-range'"
-            v-model:value="filters[filter.key]"
-            type="daterange"
-            :placeholder="filter.label"
-            clearable
-            style="min-width: 250px;"
-            @update:value="() => onFilterChange(filter.key)"
-          />
-
-        </template>
+              <!-- Date Range -->
+              <n-date-picker
+                v-else-if="filter.type === 'date-range'"
+                v-model:value="filters[filter.key]"
+                type="daterange"
+                :placeholder="filter.label"
+                clearable
+                style="min-width: 250px"
+                @update:value="() => onFilterChange(filter.key)"
+              />
+            </template>
+          </template>
+        </n-space>
       </n-space>
 
-      <SkeletonTable v-if="loading" :columns="columns" />   
+      <SkeletonTable v-if="loading" :columns="columns" />
       <!-- Data Table -->
       <n-data-table
-      v-else
+        v-else
         :columns="columns"
         :data="items"
         :loading="loading"
