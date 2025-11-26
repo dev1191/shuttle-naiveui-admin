@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { ref, computed } from 'vue'
-import type { User, Role, GeneralSettings } from '@/types'
+import type { User, Role, GeneralSettings, Option, LanguageOption } from '@/types'
 import { authApi, type LoginRequest } from '@/services/auth.service'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -8,9 +8,9 @@ export const useAuthStore = defineStore('auth', () => {
     const refreshToken = ref<string | null>(null)
     const user = ref<User | null>(null)
     const permissions = ref<string[]>([])
-    const roles = ref<[]>([])
+    const roles = ref<Option[]>([])
     const generalSettings = ref<GeneralSettings | null>(null)
-    const languages = ref<[]>([])
+    const languages = ref<LanguageOption[]>([])
 
     const isLoggedIn = computed(() => !!token.value)
     const userRole = computed<Role>(() => user.value?.role ?? 'guest')
@@ -23,7 +23,6 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function setPermissions() {
         const response = await authApi.access()
-        console.log("response", response.roles)
         permissions.value = response.permissions
         generalSettings.value = response.generalSettings
         roles.value = response.roles
@@ -70,6 +69,9 @@ export const useAuthStore = defineStore('auth', () => {
         refreshToken,
         user,
         permissions,
+        roles,
+        generalSettings,
+        languages,
         isLoggedIn,
         userRole,
         setAuth,

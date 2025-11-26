@@ -17,7 +17,7 @@ async function setupApp() {
     await setupRouter(app)
     await setupI18n(app)
 
-    app.mount('#app', true)
+    app.mount('#app')
 }
 
 setupApp()

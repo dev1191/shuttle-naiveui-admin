@@ -1,3 +1,7 @@
+enums:
+  DriverStatus:
+    Active: Active
+    Inactive: Inactive
 common:
   403Error: You have not Permission to access
   404Error: 404 Error
@@ -50,3 +54,18 @@ login:
     passwordRequired: Password is required
     emailRequired: Enter email address
   welcome: Welcome Back!
+settings:
+  title: Settings
+  account: Account
+  general:
+    title: General
+    form:
+      whiteLogo: White Logo
+      darkLogo: Dark Logo
+      favicon: Favicon
+  countries:
+    title: Countries
+  currencies:
+    title: Currencies
+  languages:
+    title: Languages

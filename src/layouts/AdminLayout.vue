@@ -31,7 +31,7 @@ const mobileOpen = ref(false);
     <NLayout class="flex-1 flex flex-col min-w-0">
       <AppHeader @open-mobile="mobileOpen = true" />
 
-      <main class="h-full overflow-auto p-2 bg-gray-100 dark:bg-gray-900">
+      <main class="h-full overflow-auto p-1 bg-gray-100 dark:bg-gray-900">
         <router-view />
       </main>
     </NLayout>

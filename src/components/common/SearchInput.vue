@@ -24,7 +24,7 @@ function searchInListDebounced(value: string) {
 </script>
 
 <template>
-    <n-input v-model="model" placeholder="search" autosize clearable
+    <n-input size="large" v-model="model" placeholder="search" autosize clearable
         class="w-50 transition-property-all transition-ease-in transition-duration-200" :class="{ 'md:w-60': focused }"
         @input="searchInListDebounced" @focus="focused = true" @blur="focused = false">
         <template #prefix>

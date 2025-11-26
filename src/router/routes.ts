@@ -71,8 +71,34 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/settings',
                 name: 'settings',
-                component: () => import('@/pages/Settings/Index.vue'),
-                meta: { title: 'Settings', icon: 'Settings', roles: ['admin', 'manager'] }
+                redirect: { name: 'siteSettings' },
+                meta: { title: 'Settings', icon: 'Settings', roles: ['admin', 'manager'] },
+                children: [
+                    {
+                        path: 'site-settings',
+                        name: 'siteSettings',
+                        component: () => import('@/pages/Settings/SiteSettings/Index.vue'),
+                        meta: { title: 'Site Settings', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'countries',
+                        name: 'countries',
+                        component: () => import('@/pages/Settings/Countries/Index.vue'),
+                        meta: { title: 'Countries', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'currencies',
+                        name: 'currencies',
+                        component: () => import('@/pages/Settings/Currencies/Index.vue'),
+                        meta: { title: 'Currencies', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'languages',
+                        name: 'languages',
+                        component: () => import('@/pages/Settings/Languages/Index.vue'),
+                        meta: { title: 'Languages', roles: ['admin', 'manager'] }
+                    }
+                ]
             },
         ]
     }

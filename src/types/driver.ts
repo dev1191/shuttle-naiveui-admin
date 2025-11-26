@@ -1,9 +1,11 @@
 export interface Driver {
-    id: string | number
+    _id: string
+    picture: string
     fullname: string
     firstName: string
     lastName: string
     email: string
+    country_code: string
     phone: string
     dateOfBirth: number | null
     address: string
@@ -14,9 +16,14 @@ export interface Driver {
     licenseExpiry: number | null
     licenseClass: string
     vehicleType: string
-    status: 'active' | 'inactive' | 'suspended'
+    status: DriverStatus
     createdAt?: string
     updatedAt?: string
+}
+
+export enum DriverStatus {
+    Active = true,
+    Inactive = false,
 }
 
 export interface CreateDriverDTO {
