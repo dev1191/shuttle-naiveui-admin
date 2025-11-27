@@ -1,5 +1,6 @@
 import httpClient from "@/common/api/http-client";
 import type { AxiosResponse } from "axios";
+import type { Customer } from "@/types/customer";
 
 /**
  * Generic API response with pagination
@@ -10,6 +11,7 @@ export interface PaginatedResponse<T> {
     page: number;
     limit: number;
     totalPages: number;
+    customer?: Customer;
 }
 
 /**

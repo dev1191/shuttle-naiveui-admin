@@ -1,13 +1,17 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, type AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/auth';
 import { createDiscreteApi } from 'naive-ui';
+import type { User } from '@/types';
 
 const { message } = createDiscreteApi(['message']);
 
 // Define the structure of the refresh token response
 interface RefreshTokenResponse {
-    accessToken: string;
-    refreshToken: string;
+    user: User,
+    token: {
+        accessToken: string;
+        refreshToken: string;
+    }
 }
 
 // Create Axios instance
@@ -65,7 +69,10 @@ httpClient.interceptors.response.use(
         const authStore = useAuthStore();
 
         if (error.response?.status === 401 && !originalRequest._retry) {
+            console.log('[Auth] 401 Unauthorized detected. Attempting token refresh...');
+
             if (isRefreshing) {
+                console.log('[Auth] Refresh already in progress, queuing request...');
                 return new Promise(function (resolve, reject) {
                     failedQueue.push({ resolve, reject });
                 })
@@ -86,10 +93,17 @@ httpClient.interceptors.response.use(
             try {
                 const refreshToken = authStore.refreshToken;
                 const userEmail = authStore.user?.email;
-                console.log("userEmail", userEmail)
+
+                console.log("[Auth] Refresh Data:", {
+                    hasRefreshToken: !!refreshToken,
+                    email: userEmail
+                });
+
                 if (!refreshToken || !userEmail) {
                     throw new Error('No refresh token or email available');
                 }
+
+                console.log('[Auth] Sending refresh token request...');
 
                 // Call your refresh token API endpoint
                 // Adjust the URL and payload structure as per your backend requirements
@@ -101,21 +115,22 @@ httpClient.interceptors.response.use(
                     }
                 );
 
-                const { accessToken, refreshToken: newRefreshToken } = response.data;
+                const { token, user: userData } = response.data;
+                const newAccessToken = token.accessToken;
 
                 // Update store with new tokens
                 authStore.setAuth({
-                    token: accessToken,
-                    refreshToken: newRefreshToken,
-                    user: authStore.user! // Keep existing user data
+                    token: newAccessToken,
+                    refreshToken: token.refreshToken,
+                    user: userData ?? authStore?.user // Keep existing user data
                 });
 
                 // Process queue with new token
-                processQueue(null, accessToken);
+                processQueue(null, newAccessToken);
 
                 // Retry original request
                 if (originalRequest.headers) {
-                    originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 }
                 return httpClient(originalRequest);
 
@@ -124,7 +139,7 @@ httpClient.interceptors.response.use(
                 authStore.clearAuth();
                 message.error('Session expired. Please login again.');
                 // Optional: Redirect to login page
-                // window.location.href = '/auth/sign-in'; 
+                window.location.href = '/auth/sign-in';
                 return Promise.reject(refreshError);
             } finally {
                 isRefreshing = false;

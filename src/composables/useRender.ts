@@ -1,24 +1,9 @@
-import {
-    Trash2 as DeleteIcon,
-    AlertTriangle as FailedIcon,
-    Star as StarIcon,
-    CheckCircle as SuccessIcon,
-} from 'lucide-vue-next'
-
-import {
-    NBadge,
-    NButton,
-    NIcon,
-    NImage,
-    NPopconfirm,
-    NSpace,
-    NTag,
-    NText,
-} from 'naive-ui'
-
+import { Trash2 as DeleteIcon, AlertTriangle as FailedIcon, Star as StarIcon, CheckCircle as SuccessIcon, MoreHorizontal } from 'lucide-vue-next'
+import { NBadge, NButton, NIcon, NImage, NPopconfirm, NSpace, NTag, NText, NDropdown } from 'naive-ui'
 import { RouterLink } from 'vue-router'
 import { i18n } from '@/plugins/i18n'
 import defaultAvatar from '@/assets/images/avatar/default.png'
+import { h } from 'vue'
 
 export function useRender() {
     const { t } = i18n.global
@@ -30,8 +15,8 @@ export function useRender() {
             {
                 default: () => [
                     h(NText, { class: 'mx-2' }, { default: () => title }),
-                    isNew && h(NTag, { type: 'primary', bordered: false, round: true, size: 'small' }, { default: () => t('common.new') }),
-                ],
+                    isNew && h(NTag, { type: 'primary', bordered: false, round: true, size: 'small' }, { default: () => t('common.new') })
+                ]
             }
         )
     }
@@ -45,17 +30,10 @@ export function useRender() {
                     { default: () => h(NIcon, {}, { default: () => h(icon) }) }
                 )
         }
-        return () => h(NIcon, {}, { default: () => h(icon, {}) })
+        return () => h(NIcon, {}, { default: () => h(icon) })
     }
 
-    function renderTag(
-        text: string,
-        type: 'error' | 'default' | 'success' | 'warning' | 'primary' | 'info',
-        stateEnum: any,
-        typename: string,
-        round = false,
-        bordered = false
-    ) {
+    function renderTag(text: string, type: 'error' | 'default' | 'success' | 'warning' | 'primary' | 'info', stateEnum: any, typename: string, round = false, bordered = false) {
         return h(NTag, { type, bordered, round, size: 'small' }, { default: () => t(`enums.${typename}.${stateEnum[text]}`) })
     }
 
@@ -66,7 +44,7 @@ export function useRender() {
     function renderRate(rate: number) {
         return [
             h(NIcon, { color: 'gold' }, { default: () => h(StarIcon) }),
-            h(NText, { class: 'mx-2' }, { default: () => rate }),
+            h(NText, { class: 'mx-2' }, { default: () => rate })
         ]
     }
 
@@ -84,15 +62,15 @@ export function useRender() {
                         objectFit: 'contain',
                         showToolbar: false,
                         alt: name,
-                        style: { 'border-radius': '3px' },
+                        style: { 'border-radius': '3px' }
                     }),
-                    h(NText, {}, { default: () => name }),
-                ],
+                    h(NText, {}, { default: () => name })
+                ]
             }
         )
     }
 
-    function renderUserAvatar(image: string, username: string) {
+    function renderUserAvatar(image: string, username: string, email?: string) {
         return h(
             NSpace,
             { align: 'center' },
@@ -105,10 +83,13 @@ export function useRender() {
                         height: 38,
                         objectFit: 'contain',
                         showToolbar: false,
-                        style: { 'border-radius': '50%' },
+                        style: { 'border-radius': '50%' }
                     }),
-                    h(NText, {}, { default: () => username }),
-                ],
+                    h('div', { class: 'flex flex-col' }, [
+                        h(NText, { depth: 1, strong: true }, { default: () => username }),
+                        email && h(NText, { depth: 3, size: 'small', class: 'text-xs' }, { default: () => email })
+                    ])
+                ]
             }
         )
     }
@@ -121,9 +102,9 @@ export function useRender() {
             { align: 'center', justify: 'start' },
             {
                 default: () => [
-                    h(NIcon, { color: iconColor, size: 'large' }, { default: () => h(icon, {}) }),
-                    h(NText, {}, { default: () => label }),
-                ],
+                    h(NIcon, { color: iconColor, size: 'large' }, { default: () => h(icon) }),
+                    h(NText, {}, { default: () => label })
+                ]
             }
         )
     }
@@ -133,7 +114,7 @@ export function useRender() {
     }
 
     function renderDate(date: string) {
-        return h(NText, {}, { default: () => `${new Date(date).toLocaleDateString()}` })
+        return h(NText, {}, { default: () => new Date(date).toLocaleDateString() })
     }
 
     function renderActionButton(icon: any, onClickAction: any, iconColor?: string) {
@@ -142,7 +123,7 @@ export function useRender() {
             quaternary: true,
             circle: true,
             renderIcon: () => h(NIcon, { color: iconColor }, { default: () => h(icon) }),
-            onClick: onClickAction,
+            onClick: onClickAction
         })
     }
 
@@ -153,23 +134,37 @@ export function useRender() {
                 onPositiveClick: confirmAction,
                 positiveText: t('common.confirm'),
                 negativeText: t('common.cancel'),
-                negativeButtonProps: { ghost: true, type: 'tertiary' },
+                negativeButtonProps: { ghost: true, type: 'tertiary' }
             },
             {
-                trigger: () => h(NButton, {
-                    size: 'medium',
-                    quaternary: true,
-                    circle: true,
-                    renderIcon: () => h(NIcon, { color: iconColor || '#d03050' }, { default: () => h(DeleteIcon) }),
-                    onClick: () => null,
-                }),
-                default: () => confirmMessage,
+                trigger: () =>
+                    h(NButton, {
+                        size: 'medium',
+                        quaternary: true,
+                        circle: true,
+                        renderIcon: () => h(NIcon, { color: iconColor || '#d03050' }, { default: () => h(DeleteIcon) }),
+                        onClick: () => null
+                    }),
+                default: () => confirmMessage
             }
         )
     }
 
     function renderActionLabel(text: string, onClickAction: any) {
         return h(NText, { onClick: onClickAction }, { default: () => text })
+    }
+
+    function renderDropdownMenu(options: any[], onSelect: (key: string | number) => void) {
+        return h(
+            NDropdown,
+            { trigger: 'hover', options, onSelect },
+            {
+                default: () =>
+                    h(NButton, { quaternary: true, circle: true, size: 'small' }, {
+                        icon: () => h(NIcon, null, { default: () => h(MoreHorizontal) })
+                    })
+            }
+        )
     }
 
     return {
@@ -186,5 +181,6 @@ export function useRender() {
         renderConfirmStatus,
         renderActionLabel,
         renderDeleteActionButton,
+        renderDropdownMenu
     }
 }

@@ -62,6 +62,10 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
+        '/public': {
+          target: env.VITE_API_PROXY_URL,
+          changeOrigin: true,
+        },
       },
     },
   }

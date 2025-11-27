@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { useMenu } from "@/composables/useMenu";
 import { computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { NMenu, NScrollbar } from "naive-ui";
 import UserProfile from "@/components/common/UserProfile.vue";
 
 const collapsed = defineModel<boolean>('collapsed', { default: false });
 
 const router = useRouter();
+const route = useRoute();
 const { menuItems } = useMenu();
 const menuOptions = computed(() => menuItems.value);
+
+const activeKey = computed(() => route.name as string);
 
 function onSelect(_key: string, item: any) {
   // Only navigate if the item has a path (leaf nodes)
@@ -40,6 +43,8 @@ function onSelect(_key: string, item: any) {
           :collapsed="collapsed"
           :collapsed-width="64"
           :collapsed-icon-size="22"
+          :value="activeKey"
+          accordion
           @update:value="onSelect"
         />
       </NScrollbar>

@@ -2,6 +2,15 @@ enums:
   DriverStatus:
     Active: Active
     Inactive: Inactive
+  CustomerStatus:
+    Active: Active
+    Inactive: Inactive
+  PaymentStatus:
+    Cancelled: Cancelled
+    Processing: Processing
+    Failed: Failed
+    Pending: Pending
+    Completed: Completed
 common:
   403Error: You have not Permission to access
   404Error: 404 Error

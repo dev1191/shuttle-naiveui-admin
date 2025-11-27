@@ -88,7 +88,7 @@ const activeKey = ref<string | null>(route.name as string);
         />
       </NLayoutSider>
 
-      <NLayoutContent class="pl-4">
+      <NLayoutContent class="py-6 px-6">
         <slot />
       </NLayoutContent>
     </NLayout>

@@ -17,6 +17,9 @@ export function useMenu() {
   function transformRouteToMenu(route: any, parentPath = ''): MenuOption | undefined {
     if (!route.meta) return undefined
 
+    // Hide from menu check
+    if (route.meta.hideInMenu) return undefined
+
     // Role check
     const roles = route.meta.roles as string[] | undefined
     if (auth.isLoggedIn) {

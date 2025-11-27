@@ -50,6 +50,31 @@ const routes: RouteRecordRaw[] = [
                 meta: { title: 'Roles', icon: 'Shield', roles: ['admin'] }
             },
             {
+                path: '/buses',
+                name: 'buses',
+                meta: { title: 'Manage Buses', icon: 'Bus', roles: ['admin', 'manager'] },
+                children: [
+                    {
+                        path: 'buseslist',
+                        name: 'busesList',
+                        component: () => import('@/pages/ManageBuses/Bus/Index.vue'),
+                        meta: { title: 'Buses List', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'create',
+                        name: 'createBus',
+                        component: () => import('@/pages/ManageBuses/Bus/Create.vue'),
+                        meta: { title: 'Create Bus', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'bustypelist',
+                        name: 'busTypesList',
+                        component: () => import('@/pages/ManageBuses/BusType/Index.vue'),
+                        meta: { title: 'Bus Types List', roles: ['admin', 'manager'] }
+                    },
+                ]
+            },
+            {
                 path: '/drivers',
                 name: 'drivers',
                 meta: { title: 'Manage Drivers', icon: 'Car', roles: ['admin', 'manager'] },
@@ -66,6 +91,44 @@ const routes: RouteRecordRaw[] = [
                         component: () => import('@/pages/Drivers/Create.vue'),
                         meta: { title: 'Create Driver', roles: ['admin', 'manager'] }
                     }
+                ]
+            },
+            {
+                path: '/customers',
+                name: 'customers',
+                meta: { title: 'Manage Customers', icon: 'User', roles: ['admin', 'manager'] },
+                children: [
+                    {
+                        path: 'list',
+                        name: 'customersList',
+                        component: () => import('@/pages/Customers/List.vue'),
+                        meta: { title: 'Customers List', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'walletRecharge',
+                        name: 'walletRecharge',
+                        component: () => import('@/pages/Customers/Wallets/WalletRecharge.vue'),
+                        meta: { title: 'Wallet Recharge', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'walletHistory/:id?',
+                        name: 'walletHistory',
+                        component: () => import('@/pages/Customers/Wallets/History.vue'),
+                        meta: { title: 'Wallet History', roles: ['admin', 'manager'], hideInMenu: true }
+                    },
+                    {
+                        path: 'referral',
+                        name: 'referral',
+                        component: () => import('@/pages/Customers/Referral.vue'),
+                        meta: { title: 'Referrals', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'suggestion',
+                        name: 'suggestion',
+                        component: () => import('@/pages/Customers/Suggestion.vue'),
+                        meta: { title: 'Suggestions', roles: ['admin', 'manager'] }
+                    }
+
                 ]
             },
             {

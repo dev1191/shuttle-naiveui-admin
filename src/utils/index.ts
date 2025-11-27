@@ -7,3 +7,16 @@ export function formatDate(ts: number) {
     const dd = String(d.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
 }
+
+export function getImageUrl(url: string) {
+    if (!url) return '';
+    if (url.startsWith('http')) {
+        try {
+            const urlObj = new URL(url);
+            return urlObj.pathname + urlObj.search;
+        } catch (e) {
+            return url;
+        }
+    }
+    return url;
+}
