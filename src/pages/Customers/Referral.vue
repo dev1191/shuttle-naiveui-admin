@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { referralsApi } from "@/services/referral.service";
+import { useRender } from "@/composables/useRender";
+
+
+
+const { renderDate } = useRender()
 
 const columns = [
   {
@@ -17,10 +22,16 @@ const columns = [
     key: "amount",
     render: (row: any) => row.amount,
   },
+
   {
     title: "Payment Status",
     key: "payment_status",
     render: (row: any) => row.payment_status,
+  },
+      {
+    title: 'Created Date',
+    key: 'createdAt',
+    render: (row: any) => renderDate(row.createdAt),
   },
 ];
 async function fetchReferrals(params: Record<string, any>) {
