@@ -86,7 +86,7 @@ httpClient.interceptors.response.use(
             try {
                 const refreshToken = authStore.refreshToken;
                 const userEmail = authStore.user?.email;
-
+                console.log("userEmail", userEmail)
                 if (!refreshToken || !userEmail) {
                     throw new Error('No refresh token or email available');
                 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
-import { NSelect, NSpace, NDataTable, NDatePicker } from "naive-ui";
+import { NSelect, NSpace, NDataTable, NDatePicker, NButton } from "naive-ui";
+import { useMessage } from "naive-ui";
 
 /** Props */
 interface FilterOption {
@@ -27,9 +28,12 @@ const props = defineProps<{
   defaultPageSize?: number;
   pageSizeOptions?: number[];
   scrollX?: number;
+  exportFileName?: string;
 }>();
 
 const emit = defineEmits(["update:items"]);
+
+const message = useMessage();
 
 /** State */
 const loading = ref(false);
@@ -132,6 +136,65 @@ function onPageSizeChange(pageSize: number) {
   loadData();
 }
 
+/* ===========================================
+   REFRESH HANDLER
+=========================================== */
+function handleRefresh() {
+  message.info("Refreshing data...");
+  loadData();
+}
+
+/* ===========================================
+   EXPORT HANDLER
+=========================================== */
+function handleExport() {
+  if (!items.value.length) {
+    message.warning("No data to export");
+    return;
+  }
+
+  try {
+    // Get column keys (excluding actions)
+    const exportColumns = props.columns.filter(col => col.key !== 'actions');
+    
+    // Create CSV header
+    const headers = exportColumns.map(col => col.title).join(',');
+    
+    // Create CSV rows
+    const rows = items.value.map(item => {
+      return exportColumns.map(col => {
+        const value = item[col.key];
+        // Escape commas and quotes
+        if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        return value ?? '';
+      }).join(',');
+    });
+    
+    // Combine header and rows
+    const csv = [headers, ...rows].join('\n');
+    
+    // Create blob and download
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', props.exportFileName || `export_${Date.now()}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    message.success("Data exported successfully");
+  } catch (error) {
+    console.error("Export error:", error);
+    message.error("Failed to export data");
+  }
+}
+
 /** Watch for column changes */
 watch(
   () => props.columns,
@@ -140,6 +203,12 @@ watch(
 
 /** Initial fetch */
 loadData();
+
+/** Expose methods for parent components */
+defineExpose({
+  loadData,
+  handleRefresh
+});
 </script>
 
 <template>
@@ -150,12 +219,11 @@ loadData();
         <!-- Search -->
         <SearchInput v-model="search" @search="onSearch" />
 
-        <!-- Dynamic Filters -->
-        <n-space align="center" justify="space-between" :size="12" wrap>
+        <!-- Dynamic Filters & Action Buttons -->
+        <n-space align="center" :size="12" wrap>
           <template v-if="extraFilters && extraFilters.length">
             <template v-for="filter in extraFilters" :key="filter.key">
               <!-- Select Filter -->
-
               <n-select
                 v-if="!filter.type || filter.type === 'select'"
                 v-model:value="filters[filter.key]"
@@ -189,6 +257,21 @@ loadData();
               />
             </template>
           </template>
+
+          <!-- Action Buttons -->
+          <NButton size="small" @click="handleRefresh" :loading="loading">
+            <template #icon>
+              <span class="iconify ph--arrows-clockwise size-5"></span>
+            </template>
+            Refresh
+          </NButton>
+
+          <NButton size="small" @click="handleExport">
+            <template #icon>
+              <span class="iconify ph--download size-5"></span>
+            </template>
+            Export
+          </NButton>
         </n-space>
       </n-space>
 

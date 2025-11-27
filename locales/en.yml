@@ -69,3 +69,17 @@ settings:
     title: Currencies
   languages:
     title: Languages
+  email:
+    title: Email Settings
+  refund:
+    title: Refund Settings
+  notification:
+    title: Notification Settings
+  referral:
+    title: Referral Settings
+  storage:
+    title: Storage Settings
+  terms:
+    title: Terms & Conditions Settings
+  privacy:
+    title: Privacy Policy Settings

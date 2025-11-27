@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useThemeStore } from '@/stores/theme'
 import { NSpace, NText, NSwitch, NColorPicker, NSlider } from 'naive-ui'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const themeStore = useThemeStore()
 
@@ -27,7 +28,10 @@ const swatches = [
 <template>
   <div class="p-4">
     <NSpace vertical>
-      <NText strong>Theme Mode</NText>
+      <NText strong>Language</NText>
+      <LanguageSwitcher />
+
+      <NText strong class="mt-4">Theme Mode</NText>
       <NSpace align="center">
         <NText>Light</NText>
         <NSwitch :value="themeStore.isDark" @update:value="themeStore.toggleTheme" />

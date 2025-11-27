@@ -97,6 +97,36 @@ const routes: RouteRecordRaw[] = [
                         name: 'languages',
                         component: () => import('@/pages/Settings/Languages/Index.vue'),
                         meta: { title: 'Languages', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'emailSettings',
+                        name: 'emailSettings',
+                        component: () => import('@/pages/Settings/Email/Index.vue'),
+                        meta: { title: 'Email Settings', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'storageSettings',
+                        name: 'storageSettings',
+                        component: () => import('@/pages/Settings/Storage/Index.vue'),
+                        meta: { title: 'Storage Settings', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'referralSettings',
+                        name: 'referralSettings',
+                        component: () => import('@/pages/Settings/Referral/Index.vue'),
+                        meta: { title: 'Referral Settings', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'notificationSettings',
+                        name: 'notificationSettings',
+                        component: () => import('@/pages/Settings/Notification/Index.vue'),
+                        meta: { title: 'Notification Settings', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'refundSettings',
+                        name: 'refundSettings',
+                        component: () => import('@/pages/Settings/Refund/Index.vue'),
+                        meta: { title: 'Refund Settings', roles: ['admin', 'manager'] }
                     }
                 ]
             },

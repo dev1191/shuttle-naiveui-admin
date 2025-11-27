@@ -32,10 +32,13 @@ const loadedLanguages: string[] = []
 
 function setI18nLanguage(lang: Locale) {
     i18n.global.locale.value = lang as any
-    if (typeof document !== 'undefined')
-        document
-            .querySelector('html')
-            ?.setAttribute('lang', lang)
+    if (typeof document !== 'undefined') {
+        const html = document.querySelector('html')
+        if (html) {
+            html.setAttribute('lang', lang)
+            html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr')
+        }
+    }
     return lang
 }
 
@@ -51,7 +54,13 @@ export async function loadLanguageAsync(
         return setI18nLanguage(lang)
 
     // If the language hasn't been loaded yet
-    const messages = await localesMap[lang]()
+    const loader = localesMap[lang]
+    if (!loader) {
+        console.warn(`Locale ${lang} not found`)
+        return setI18nLanguage('en') // Fallback
+    }
+
+    const messages = await loader()
     i18n.global.setLocaleMessage(lang, messages.default)
     loadedLanguages.push(lang)
     return setI18nLanguage(lang)

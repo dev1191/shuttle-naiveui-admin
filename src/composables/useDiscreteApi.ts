@@ -1,10 +1,11 @@
-import { enUS, dateEnUS } from 'naive-ui'
+import { enUS, dateEnUS, arDZ, dateArDZ } from 'naive-ui'
 import { computed, h } from 'vue'
 import { darkTheme, lightTheme } from 'naive-ui'
 import type { ConfigProviderProps } from 'naive-ui'
 import type { MessageApi, DialogApi, NotificationApi, LoadingBarApi, ModalApi } from 'naive-ui'
 import themeOverrides from '@/common/theme/theme-overrides'
 import { useThemeStore } from '@/stores/theme'
+import { rtlStyles } from '@/utils/rtl'
 
 export function getConfigProviderProps() {
   const themeStore = useThemeStore()
@@ -45,8 +46,9 @@ export function getConfigProviderProps() {
     }
 
     return {
-      locale: enUS,
-      dateLocale: dateEnUS,
+      locale: themeStore.language === 'ar' ? arDZ : enUS,
+      dateLocale: themeStore.language === 'ar' ? dateArDZ : dateEnUS,
+      rtl: themeStore.language === 'ar' ? rtlStyles : undefined,
       theme: themeStore.isDark ? darkTheme : lightTheme,
       themeOverrides: mergedOverrides,
       icons: {

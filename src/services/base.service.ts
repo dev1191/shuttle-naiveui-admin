@@ -1,5 +1,5 @@
-import httpClient from '@/common/api/http-client';
-import type { AxiosResponse } from 'axios';
+import httpClient from "@/common/api/http-client";
+import type { AxiosResponse } from "axios";
 
 /**
  * Generic API response with pagination
@@ -20,7 +20,7 @@ export interface QueryParams {
     limit?: number;
     search?: string;
     sortBy?: string;
-    sortOrder?: 'asc' | 'desc';
+    sortOrder?: "asc" | "desc";
     [key: string]: any;
 }
 
@@ -52,7 +52,9 @@ export class ApiService<T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>> {
      * Get a single item by ID
      */
     async getById(id: string | number): Promise<T> {
-        const response: AxiosResponse<T> = await httpClient.get(`${this.endpoint}/${id}`);
+        const response: AxiosResponse<T> = await httpClient.get(
+            `${this.endpoint}/${id}`
+        );
         return response.data;
     }
 
@@ -60,7 +62,10 @@ export class ApiService<T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>> {
      * Create a new item
      */
     async create(data: CreateDTO): Promise<T> {
-        const response: AxiosResponse<T> = await httpClient.post(this.endpoint, data);
+        const response: AxiosResponse<T> = await httpClient.post(
+            this.endpoint,
+            data
+        );
         return response.data;
     }
 
@@ -89,8 +94,12 @@ export class ApiService<T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>> {
     /**
      * Delete an item
      */
-    async delete(id: string | number): Promise<void> {
-        await httpClient.delete(`${this.endpoint}/${id}`);
+    async delete(
+        id: string | number
+    ): Promise<{ status: boolean; message: string }> {
+        const response: AxiosResponse<{ status: boolean; message: string }> =
+            await httpClient.delete(`${this.endpoint}/${id}`);
+        return response.data;
     }
 
     /**
@@ -126,8 +135,10 @@ export class ApiService<T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>> {
 /**
  * Factory function to create API service instances
  */
-export function createApiService<T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
-    endpoint: string
-): ApiService<T, CreateDTO, UpdateDTO> {
+export function createApiService<
+    T,
+    CreateDTO = Partial<T>,
+    UpdateDTO = Partial<T>
+>(endpoint: string): ApiService<T, CreateDTO, UpdateDTO> {
     return new ApiService<T, CreateDTO, UpdateDTO>(endpoint);
 }

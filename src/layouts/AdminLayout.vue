@@ -10,7 +10,7 @@ const mobileOpen = ref(false);
 </script>
 
 <template>
-  <NLayout has-sider class="h-screen flex">
+  <NLayout has-sider class="h-screen flex dark:bg-gray-800">
     <!-- Desktop Sidebar -->
     <NLayoutSider
       v-model:collapsed="themeStore.sidebarCollapsed"
@@ -31,7 +31,7 @@ const mobileOpen = ref(false);
     <NLayout class="flex-1 flex flex-col min-w-0">
       <AppHeader @open-mobile="mobileOpen = true" />
 
-      <main class="h-full overflow-auto p-1 bg-gray-100 dark:bg-gray-900">
+      <main class="h-full overflow-auto p-2 dark:bg-gray-800">
         <router-view />
       </main>
     </NLayout>

@@ -136,17 +136,17 @@ export function useRender() {
         return h(NText, {}, { default: () => `${new Date(date).toLocaleDateString()}` })
     }
 
-    function renderActionButton(icon: any, onClickAction: any) {
+    function renderActionButton(icon: any, onClickAction: any, iconColor?: string) {
         return h(NButton, {
             size: 'medium',
             quaternary: true,
             circle: true,
-            renderIcon: renderIcon(icon),
+            renderIcon: () => h(NIcon, { color: iconColor }, { default: () => h(icon) }),
             onClick: onClickAction,
         })
     }
 
-    function renderDeleteActionButton(confirmMessage: string, confirmAction: any) {
+    function renderDeleteActionButton(confirmMessage: string, confirmAction: any, iconColor?: string) {
         return h(
             NPopconfirm,
             {
@@ -156,7 +156,13 @@ export function useRender() {
                 negativeButtonProps: { ghost: true, type: 'tertiary' },
             },
             {
-                trigger: () => renderActionButton(DeleteIcon, () => null),
+                trigger: () => h(NButton, {
+                    size: 'medium',
+                    quaternary: true,
+                    circle: true,
+                    renderIcon: () => h(NIcon, { color: iconColor || '#d03050' }, { default: () => h(DeleteIcon) }),
+                    onClick: () => null,
+                }),
                 default: () => confirmMessage,
             }
         )

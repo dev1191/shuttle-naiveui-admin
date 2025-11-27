@@ -11,8 +11,19 @@ import {
 import { getConfigProviderProps } from "@/composables";
 import DiscreteApi from "./DiscreteApi.vue";
 import SettingsDrawer from "./SettingsDrawer.vue";
+import { useThemeStore } from "@/stores/theme";
+import { loadLanguageAsync } from "@/plugins/i18n";
+import { watch } from "vue";
 
 const configProviderProps = getConfigProviderProps();
+const themeStore = useThemeStore();
+
+watch(
+  () => themeStore.language,
+  (lang) => {
+    loadLanguageAsync(lang);
+  }
+);
 </script>
 
 <template>

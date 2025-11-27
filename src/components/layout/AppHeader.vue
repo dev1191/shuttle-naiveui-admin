@@ -22,7 +22,7 @@ function handleLogout() {
 <template>
   <NLayoutHeader
     bordered
-    class="flex items-center justify-between px-6 h-16 bg-white dark:bg-gray-800"
+    class="flex items-center justify-between px-6 h-16 bg-white dark:bg-gray-700"
   >
     <!-- Left Side: Mobile Menu + Breadcrumb -->
     <div class="flex items-center gap-4">

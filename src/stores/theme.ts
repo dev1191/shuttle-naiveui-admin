@@ -70,6 +70,6 @@ export const useThemeStore = defineStore('theme', () => {
     persist: {
         key: 'theme-store',
         storage: localStorage,
-        pick: ['sidebarCollapsed', 'primaryColor', 'borderRadius', 'themeMode']
+        pick: ['sidebarCollapsed', 'primaryColor', 'borderRadius', 'themeMode', 'language']
     }
 });

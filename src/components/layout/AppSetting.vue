@@ -1,10 +1,18 @@
 <script lang="ts" setup>
-import { h, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { NMenu, NLayout, NLayoutSider, NLayoutContent } from 'naive-ui';
 import { RouterLink, useRoute } from 'vue-router';
-import { Settings as SettingsIcon, Globe as GlobeIcon, Banknote as CurrencyIcon, Languages as LanguageIcon } from 'lucide-vue-next';
-import Heading from '@/components/common/Heading.vue';
+import { 
+  Settings as SettingsIcon, 
+  Globe as GlobeIcon, Banknote as CurrencyIcon, 
+  Languages as LanguageIcon ,
+  MailIcon as MailIcon,
+  Warehouse as StorageIcon,
+  Share as ShareIcon,
+  TicketSlash as RefundIcon,
+  Megaphone as NotificationIcon
+} from 'lucide-vue-next';
+
 import { useRender } from '@/composables/useRender';
 
 const { t } = useI18n();
@@ -33,21 +41,45 @@ const menuOptions = [
     label: () => h(RouterLink, { to: { name: 'languages' } }, { default: () => t('settings.languages.title') }),
     key: 'languages',
     icon: renderIcon(LanguageIcon)
-  }
+  },
+    {
+    label: () => h(RouterLink, { to: { name: 'emailSettings' } }, { default: () => t('settings.email.title') }),
+    key: 'email',
+    icon: renderIcon(MailIcon)
+  },
+  {
+    label: () => h(RouterLink, { to: { name: 'notificationSettings' } }, { default: () => t('settings.notification.title') }),
+    key: 'notification',
+    icon: renderIcon(NotificationIcon)
+  },
+  {
+    label: () => h(RouterLink, { to: { name: 'refundSettings' } }, { default: () => t('settings.refund.title') }),
+    key: 'refund',
+    icon: renderIcon(RefundIcon)
+  },
+  {
+    label: () => h(RouterLink, { to: { name: 'referralSettings' } }, { default: () => t('settings.referral.title') }),
+    key: 'referral',
+    icon: renderIcon(ShareIcon)
+  },
+  {
+    label: () => h(RouterLink, { to: { name: 'storageSettings' } }, { default: () => t('settings.storage.title') }),
+    key: 'storage',
+    icon: renderIcon(StorageIcon)
+  },
 ];
 
 const activeKey = ref<string | null>(route.name as string);
 </script>
 
 <template>
-  <div class="px-1">
+  <div class="">
 
-    <NLayout has-sider class="mt-4 bg-transparent">
+    <NLayout has-sider class="">
       <NLayoutSider
         bordered
         width="255"
         content-style="padding-right: 20px;"
-        class="bg-transparent"
       >
         <NMenu
           :options="menuOptions"
@@ -56,7 +88,7 @@ const activeKey = ref<string | null>(route.name as string);
         />
       </NLayoutSider>
 
-      <NLayoutContent class="bg-transparent pl-4">
+      <NLayoutContent class="pl-4">
         <slot />
       </NLayoutContent>
     </NLayout>
