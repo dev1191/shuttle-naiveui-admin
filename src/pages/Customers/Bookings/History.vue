@@ -13,23 +13,28 @@ const {renderTag} = useRender()
 
 const columns = [
   {
-    title: "Title",
-    key: "title",
+    title: "PNR No.",
+    key: "pnr_no",
   },
   {
-    title: "Amount",
-    key: "amount",
-    render: (row: any) => row.amount,
+    title: "Date/Time",
+    key: "date_time",
   },
   {
-    title: "Status",
-    key: "status",
-    render: (row: any) => row.status,
+    title: "Stop/Routes",
+    key: "stopping_points",
   },
   {
-    title: "Method",
-    key: "method",
-    render: (row: any) => row.method,
+    title: "Bus Name",
+    key: "bus_name",
+  },
+  {
+    title:"Total Passengers",
+    key:"passengers"
+  },
+  {
+    title:"Total Amount",
+    key:"final_total_fare"
   },
   {
     title: "Payment Status",
@@ -52,7 +57,7 @@ const columns = [
 const customer = ref<Customer | null>(null);
 const loading = ref(true);
 async function fetchWalletHistories(params: Record<string, any>) {
-  const response = await customersApi.walletHistory(route.params.id, params);
+  const response = await customersApi.bookingHistory(route.params.id, params);
   customer.value = response.customer;
   loading.value = false;
   return {
@@ -93,16 +98,7 @@ const extraFilters = [
         <!-- Row of Two Cards -->
         <div class="flex gap-4 mb-4">
           <!-- Left: Wallet Balance Card -->
-          <NCard class="flex-1" :bordered="true" title="Wallet Balance">
-            <template v-if="loading">
-              <NSkeleton height="32px" width="120px" />
-            </template>
-            <template v-else>
-              <div class="text-3xl font-bold">
-                {{ customer.wallet_balance }}
-              </div>
-            </template>
-          </NCard>
+       
 
           <!-- Right: Customer Details Card -->
           <NCard class="flex-1" :bordered="true" title="Customer Details">
@@ -121,7 +117,7 @@ const extraFilters = [
               <div class="flex items-center gap-4">
                 <NAvatar :src="customer.picture ?? defaultAvatar" size="medium" />
                 <div>
-                  <div class="font-semibold">{{ customer.fullname }}</div>
+                  <div class="font-semibold">{{ customer.firstname }} {{ customer.lastname }}</div>
                   <div>Phone: {{ customer.phone }}</div>
                   <div>Email: {{ customer.email }}</div>
                 </div>

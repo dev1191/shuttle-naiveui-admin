@@ -12,6 +12,8 @@ export function usePayments() {
                 return 'warning'
             case PaymentStatus.Failed:
                 return 'error'
+            case PaymentStatus.Refunded:
+                return 'primary'
             case PaymentStatus.Cancelled:
                 return 'error'
         }

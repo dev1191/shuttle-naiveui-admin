@@ -15,8 +15,8 @@ function getActionOptions(row: Customer) {
   return [
     { key: 'view', label: 'View', icon: renderIcon(Eye) },
     { key: 'edit', label: 'Edit', icon: renderIcon(Edit2) },
-    { key: 'wallet', label: 'Wallet History', icon: renderIcon(Wallet) },
-    { key: 'transactions', label: 'Transaction History', icon: renderIcon(List) },
+    { key: 'wallet', label: 'Wallet Histories', icon: renderIcon(Wallet) },
+    { key: 'bookings', label: 'Booking Histories', icon: renderIcon(List) },
     { key: 'delete', label: 'Delete', icon: renderIcon(Trash2) },
   ];
 }
@@ -32,8 +32,8 @@ function handleAction(key: string, row: Customer) {
     case 'wallet':
       router.push({ name: 'walletHistory', params: { id: row.ids } });
       break;
-    case 'transactions':
-      router.push({ name: 'transactionHistory', params: { id: row.ids } });
+    case 'bookings':
+      router.push({ name: 'bookingHistory', params: { id: row.ids } });
       break;
     case 'delete':
       customersApi.delete(row.ids).then(() => {

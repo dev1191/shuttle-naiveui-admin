@@ -34,5 +34,9 @@ export const customersApi = {
         const walletHistoryService = createApiService<any>(`/users/${customerId}/wallet-histories`)
         return walletHistoryService.getAll(params)
     },
+    bookingHistory: async (customerId: string, params?: any) => {
+        const walletHistoryService = createApiService<any>(`/bookings/histories/${customerId}`)
+        return walletHistoryService.getAll(params)
+    },
     rechargeWallet: walletApiService.create.bind(walletApiService),
 }

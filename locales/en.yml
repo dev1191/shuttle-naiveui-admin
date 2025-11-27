@@ -11,6 +11,7 @@ enums:
     Failed: Failed
     Pending: Pending
     Completed: Completed
+    Refunded: Refunded
 common:
   403Error: You have not Permission to access
   404Error: 404 Error

@@ -117,6 +117,12 @@ const routes: RouteRecordRaw[] = [
                         meta: { title: 'Wallet History', roles: ['admin', 'manager'], hideInMenu: true }
                     },
                     {
+                        path: 'bookingHistory/:id?',
+                        name: 'bookingHistory',
+                        component: () => import('@/pages/Customers/Bookings/History.vue'),
+                        meta: { title: 'Booking History', roles: ['admin', 'manager'], hideInMenu: true }
+                    },
+                    {
                         path: 'referral',
                         name: 'referral',
                         component: () => import('@/pages/Customers/Referral.vue'),
