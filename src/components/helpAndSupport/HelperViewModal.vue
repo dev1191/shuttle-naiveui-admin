@@ -22,5 +22,18 @@ const emit = defineEmits<{
     <NDescriptionsItem label="Customer Last Name">
       {{ viewingHelper.lastname }}
     </NDescriptionsItem>
+
+    <NDescriptionsItem label="Customer Phone Number">
+      {{ viewingHelper.phone }}
+    </NDescriptionsItem>
+    <NDescriptionsItem label="Description" :span="2">
+      {{ viewingHelper.description }}
+    </NDescriptionsItem>
   </NDescriptions>
+
+
+       <!-- Action Buttons -->
+      <div class="mt-6 flex justify-end gap-2">
+        <NButton @click="emit('close')"> Close </NButton>
+      </div>
 </template>
