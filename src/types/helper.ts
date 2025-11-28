@@ -1,7 +1,7 @@
 
 
 export interface Helper {
-    id: number
+    ids: string
     title: string
     description: string
     createdAt: string

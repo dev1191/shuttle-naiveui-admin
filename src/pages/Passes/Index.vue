@@ -106,18 +106,24 @@ const handleSubmit = async (data: Pass) => {
     if (selectedPass.value?.ids) {
       // Update existing
       await passsApi.update(selectedPass.value.ids, {
-        name: data.name,
-        short_name: data.short_name,
-        phone_code: data.phone_code,
+        no_of_rides: data.no_of_rides,
+        no_of_valid_days: data.no_of_valid_days,
+        price_per_km: data.price_per_km,
+        terms: data.terms,
+        description: data.description,
+        discount: data.discount,
         status: data.status,
       });
       message.success("Pass updated successfully");
     } else {
       // Add new
       await passsApi.create({
-        name: data.name,
-        short_name: data.short_name,
-        phone_code: data.phone_code,
+        no_of_rides: data.no_of_rides,
+        no_of_valid_days: data.no_of_valid_days,
+        price_per_km: data.price_per_km,
+        terms: data.terms,
+        description: data.description,
+        discount: data.discount,
         status: data.status,
       });
       message.success("Pass added successfully");

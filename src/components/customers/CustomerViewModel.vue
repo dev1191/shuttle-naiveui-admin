@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { NDescriptions, NDescriptionsItem, NAvatar, NButton } from "naive-ui";
 import type { Customer } from "@/types/customer";
-import { useRender } from "@/composables/useRender";
+
 
 const props = defineProps<{
   viewingCustomer: Customer;
@@ -12,7 +12,7 @@ const emit = defineEmits<{
   (e: 'edit', customer: Customer): void;
 }>();
 
-const { renderDate } = useRender();
+
 </script>
 
 
