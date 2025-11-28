@@ -230,6 +230,8 @@ function handleSorterChange(sorter: DataTableSortState) {
 =========================================== */
 function handleRefresh() {
   message.info("Refreshing data...");
+  pagination.sortBy = 'createdAt';
+  pagination.sortOrder = 'desc';
   loadData();
 }
 

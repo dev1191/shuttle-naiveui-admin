@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { NSwitch, useMessage } from "naive-ui";
 import type { DataTableColumns } from "naive-ui";
-import { bustypesApi } from "@/services/buses/busType.service";
-import type { BusType } from "@/types/buses/busType";
+import { offersApi } from "@/services/offer.service";
+import type { Offer } from "@/types/offer";
 import { useRender } from "@/composables/useRender";
 import { PencilIcon as EditIcon } from "lucide-vue-next";
 
@@ -10,12 +10,27 @@ const message = useMessage();
 const { t } = useI18n();
 const showDrawer = ref(false);
 const loading = ref(false);
-const selectedBusType = ref<BusType | null>(null);
+const selectedOffer = ref<Offer | null>(null);
 const tableRef = ref();
 const { renderActionButton, renderDeleteActionButton } = useRender();
 
 const formFields = [
-  { key: "name", label: "BusType Name", required: true },
+  { key: "name", label: "Offer Name", required: true },
+  {
+    key: "start_date",
+    label: "Start Date",
+    type:"datepicker",
+    dateType: "date",
+    required: true,
+  },
+  {
+    key: "end_date",
+    label: "End Date",
+    dateType: "date",
+    required: true,
+  },
+  { key: "code", label: "Offer Code", required: true },
+  { key: "discount", label: "Discount", type: "number", required: true },
   {
     key: "status",
     label: "Status",
@@ -24,8 +39,13 @@ const formFields = [
   },
 ];
 
-const columns: DataTableColumns<BusType> = [
+const columns: DataTableColumns<Offer> = [
   { title: "Name", key: "name" },
+  { title: "Code", key: "code" },
+  { title: "Start Date", key: "start_date" },
+  { title: "End Date", key: "end_date" },
+  { title: "Type", key: "type" },
+  { title: "Route Name", key: "route_name" },
   {
     title: "Status",
     key: "status",
@@ -34,7 +54,7 @@ const columns: DataTableColumns<BusType> = [
         value: row.status,
         onUpdateValue: async (value: boolean) => {
           try {
-            await bustypesApi.update(row.ids, { status: value });
+            await offersApi.update(row.ids, { status: value });
             row.status = value;
             message.success(`${row.name} status updated successfully`);
           } catch (error) {
@@ -58,18 +78,18 @@ const columns: DataTableColumns<BusType> = [
 ];
 
 const handleAdd = () => {
-  selectedBusType.value = null;
+  selectedOffer.value = null;
   showDrawer.value = true;
 };
 
-const handleEdit = (bustype: BusType) => {
-  selectedBusType.value = { ...bustype };
+const handleEdit = (offer: Offer) => {
+  selectedOffer.value = { ...offer };
   showDrawer.value = true;
 };
 
-const handleDelete = async (bustype: BusType) => {
+const handleDelete = async (offer: Offer) => {
   try {
-    const response = await bustypesApi.delete(bustype.ids);
+    const response = await offersApi.delete(offer.ids);
     message.success(response.message);
     if (response.status) {
       loadData();
@@ -80,28 +100,28 @@ const handleDelete = async (bustype: BusType) => {
   }
 };
 
-const handleSubmit = async (data: BusType) => {
+const handleSubmit = async (data: Offer) => {
   loading.value = true;
 
   try {
-    if (selectedBusType.value?.ids) {
+    if (selectedOffer.value?.ids) {
       // Update existing
-      await bustypesApi.update(selectedBusType.value.ids, {
+      await offersApi.update(selectedOffer.value.ids, {
         name: data.name,
         short_name: data.short_name,
         phone_code: data.phone_code,
         status: data.status,
       });
-      message.success("BusType updated successfully");
+      message.success("Offer updated successfully");
     } else {
       // Add new
-      await bustypesApi.create({
+      await offersApi.create({
         name: data.name,
         short_name: data.short_name,
         phone_code: data.phone_code,
         status: data.status,
       });
-      message.success("BusType added successfully");
+      message.success("Offer added successfully");
     }
 
     showDrawer.value = false;
@@ -113,12 +133,12 @@ const handleSubmit = async (data: BusType) => {
       error.response?.data?.message?.includes("already exists")
     ) {
       message.error(
-        "This bustype already exists. Please use a different name or code."
+        "This offer already exists. Please use a different name or code."
       );
     } else if (error.response?.data?.message) {
       message.error(error.response.data.message);
     } else {
-      message.error("Failed to save bustype. Please try again.");
+      message.error("Failed to save offer. Please try again.");
     }
     console.error("Submit error:", error);
   } finally {
@@ -127,12 +147,12 @@ const handleSubmit = async (data: BusType) => {
 };
 
 const handleCancel = () => {
-  selectedBusType.value = null;
+  selectedOffer.value = null;
 };
 
 // Fetch function for DataTableWrapper
-async function fetchBusTypes(params: Record<string, any>) {
-  const response = await bustypesApi.getAll(params);
+async function fetchOffers(params: Record<string, any>) {
+  const response = await offersApi.getAll(params);
   return {
     items: response.items,
     totalRecords: response.totalRecords,
@@ -160,13 +180,13 @@ function loadData() {
               <template #icon>
                 <span class="iconify ph--plus size-5"></span>
               </template>
-              Add BusType
+              Add Offer
             </NButton>
           </NSpace>
 
           <DataTableWrapper
             ref="tableRef"
-            :fetchData="fetchBusTypes"
+            :fetchData="fetchOffers"
             :columns="columns"
             :extraFilters="[]"
             :defaultPageSize="10"
@@ -178,9 +198,9 @@ function loadData() {
         <FormDrawer
           ref="formDrawerRef"
           v-model:show="showDrawer"
-          :title="selectedBusType ? 'Edit BusType' : 'Add BusType'"
+          :title="selectedOffer ? 'Edit Offer' : 'Add Offer'"
           :fields="formFields"
-          :model-value="selectedBusType"
+          :model-value="selectedOffer"
           :loading="loading"
           @submit="handleSubmit"
           @cancel="handleCancel"

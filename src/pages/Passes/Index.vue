@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { NSwitch, useMessage } from "naive-ui";
 import type { DataTableColumns } from "naive-ui";
-import { bustypesApi } from "@/services/buses/busType.service";
-import type { BusType } from "@/types/buses/busType";
+import { passsApi } from "@/services/pass.service";
+import type { Pass } from "@/types/pass";
 import { useRender } from "@/composables/useRender";
 import { PencilIcon as EditIcon } from "lucide-vue-next";
 
@@ -10,12 +10,28 @@ const message = useMessage();
 const { t } = useI18n();
 const showDrawer = ref(false);
 const loading = ref(false);
-const selectedBusType = ref<BusType | null>(null);
+const selectedPass = ref<Pass | null>(null);
 const tableRef = ref();
 const { renderActionButton, renderDeleteActionButton } = useRender();
 
 const formFields = [
-  { key: "name", label: "BusType Name", required: true },
+  { key: "no_of_rides", label: "No of Rides", type: "number", required: true },
+  {
+    key: "no_of_valid_days",
+    label: "No of Valid Days",
+    type: "number",
+    required: true,
+  },
+  {
+    key: "price_per_km",
+    label: "Price Per Km",
+    type: "number",
+    required: true,
+  },
+  { key: "discount", label: "Discount", type: "number", required: true },
+  { key: "description", label: "Description", type: "textarea" },
+  { key: "terms", label: "Terms And Conditions", type: "textarea" },
+
   {
     key: "status",
     label: "Status",
@@ -24,8 +40,11 @@ const formFields = [
   },
 ];
 
-const columns: DataTableColumns<BusType> = [
-  { title: "Name", key: "name" },
+const columns: DataTableColumns<Pass> = [
+  { title: "No Of Rides", key: "no_of_rides" },
+  { title: "Valid Days", key: "no_of_valid_days" },
+  { title: "Price Per Km", key: "price_per_km" },
+  { title: "Discount", key: "discount" },
   {
     title: "Status",
     key: "status",
@@ -34,7 +53,7 @@ const columns: DataTableColumns<BusType> = [
         value: row.status,
         onUpdateValue: async (value: boolean) => {
           try {
-            await bustypesApi.update(row.ids, { status: value });
+            await passsApi.update(row.ids, { status: value });
             row.status = value;
             message.success(`${row.name} status updated successfully`);
           } catch (error) {
@@ -58,18 +77,18 @@ const columns: DataTableColumns<BusType> = [
 ];
 
 const handleAdd = () => {
-  selectedBusType.value = null;
+  selectedPass.value = null;
   showDrawer.value = true;
 };
 
-const handleEdit = (bustype: BusType) => {
-  selectedBusType.value = { ...bustype };
+const handleEdit = (pass: Pass) => {
+  selectedPass.value = { ...pass };
   showDrawer.value = true;
 };
 
-const handleDelete = async (bustype: BusType) => {
+const handleDelete = async (pass: Pass) => {
   try {
-    const response = await bustypesApi.delete(bustype.ids);
+    const response = await passsApi.delete(pass.ids);
     message.success(response.message);
     if (response.status) {
       loadData();
@@ -80,28 +99,28 @@ const handleDelete = async (bustype: BusType) => {
   }
 };
 
-const handleSubmit = async (data: BusType) => {
+const handleSubmit = async (data: Pass) => {
   loading.value = true;
 
   try {
-    if (selectedBusType.value?.ids) {
+    if (selectedPass.value?.ids) {
       // Update existing
-      await bustypesApi.update(selectedBusType.value.ids, {
+      await passsApi.update(selectedPass.value.ids, {
         name: data.name,
         short_name: data.short_name,
         phone_code: data.phone_code,
         status: data.status,
       });
-      message.success("BusType updated successfully");
+      message.success("Pass updated successfully");
     } else {
       // Add new
-      await bustypesApi.create({
+      await passsApi.create({
         name: data.name,
         short_name: data.short_name,
         phone_code: data.phone_code,
         status: data.status,
       });
-      message.success("BusType added successfully");
+      message.success("Pass added successfully");
     }
 
     showDrawer.value = false;
@@ -113,12 +132,12 @@ const handleSubmit = async (data: BusType) => {
       error.response?.data?.message?.includes("already exists")
     ) {
       message.error(
-        "This bustype already exists. Please use a different name or code."
+        "This pass already exists. Please use a different name or code."
       );
     } else if (error.response?.data?.message) {
       message.error(error.response.data.message);
     } else {
-      message.error("Failed to save bustype. Please try again.");
+      message.error("Failed to save pass. Please try again.");
     }
     console.error("Submit error:", error);
   } finally {
@@ -127,12 +146,12 @@ const handleSubmit = async (data: BusType) => {
 };
 
 const handleCancel = () => {
-  selectedBusType.value = null;
+  selectedPass.value = null;
 };
 
 // Fetch function for DataTableWrapper
-async function fetchBusTypes(params: Record<string, any>) {
-  const response = await bustypesApi.getAll(params);
+async function fetchPasss(params: Record<string, any>) {
+  const response = await passsApi.getAll(params);
   return {
     items: response.items,
     totalRecords: response.totalRecords,
@@ -160,13 +179,13 @@ function loadData() {
               <template #icon>
                 <span class="iconify ph--plus size-5"></span>
               </template>
-              Add BusType
+              Add Pass
             </NButton>
           </NSpace>
 
           <DataTableWrapper
             ref="tableRef"
-            :fetchData="fetchBusTypes"
+            :fetchData="fetchPasss"
             :columns="columns"
             :extraFilters="[]"
             :defaultPageSize="10"
@@ -178,9 +197,9 @@ function loadData() {
         <FormDrawer
           ref="formDrawerRef"
           v-model:show="showDrawer"
-          :title="selectedBusType ? 'Edit BusType' : 'Add BusType'"
+          :title="selectedPass ? 'Edit Pass' : 'Add Pass'"
           :fields="formFields"
-          :model-value="selectedBusType"
+          :model-value="selectedPass"
           :loading="loading"
           @submit="handleSubmit"
           @cancel="handleCancel"

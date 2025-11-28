@@ -22,8 +22,8 @@ export interface Customer {
 }
 
 export enum CustomerStatus {
-    Active = true,
-    Inactive = false,
+    Active = 'Active',
+    Inactive = 'Inactive',
 }
 
 export interface CreateCustomerDTO {

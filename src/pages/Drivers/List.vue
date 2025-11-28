@@ -13,15 +13,14 @@ const columns = [
   {
     title: 'Full Name',
     key: 'fullname',
-    render: (row: Driver) => renderUserAvatar(row.picture, `${row.fullname}`),
+    render: (row: Driver) => renderUserAvatar(row.picture, `${row.fullname}`, `${row.email}`),
   },
-  { title: 'Email', key: 'email' },
   {
     title: 'Phone',
     key: 'phone',
     render: (row: Driver) => `+${row.country_code} ${row.phone}`,
   },
-  { title: 'License Number', key: 'licenseNumber' },
+  { title: 'Type', key: 'type',sorter:true},
   {
     title: 'Status',
     key: 'status',
@@ -36,6 +35,7 @@ const columns = [
   {
     title:'Created Date',
     key:'createdAt',
+    sorter:true,
     render(row: Driver){
       return renderDate(row.createdAt)
     }

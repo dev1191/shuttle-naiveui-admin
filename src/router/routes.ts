@@ -52,7 +52,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/buses',
                 name: 'buses',
-                meta: { title: 'Manage Buses', icon: 'Bus', roles: ['admin', 'manager'] },
+                meta: { title: 'Manage Buses', icon: 'BusFront', roles: ['admin', 'manager'] },
                 children: [
                     {
                         path: 'buseslist',
@@ -71,6 +71,12 @@ const routes: RouteRecordRaw[] = [
                         name: 'busTypesList',
                         component: () => import('@/pages/ManageBuses/BusType/Index.vue'),
                         meta: { title: 'Bus Types List', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'buslayoutlist',
+                        name: 'busLayoutsList',
+                        component: () => import('@/pages/ManageBuses/BusLayout/Index.vue'),
+                        meta: { title: 'Bus Layouts List', roles: ['admin', 'manager'] }
                     },
                 ]
             },
@@ -136,6 +142,36 @@ const routes: RouteRecordRaw[] = [
                     }
 
                 ]
+            },
+            {
+                path: '/offers',
+                name: 'offers',
+                component: () => import('@/pages/Offers/Index.vue'),
+                meta: { title: 'Manage Offers', icon: 'TicketPercent', roles: ['admin'] }
+            },
+            {
+                path: '/passes',
+                name: 'passes',
+                component: () => import('@/pages/Passes/Index.vue'),
+                meta: { title: 'Manage Passes', icon: 'Ticket', roles: ['admin'] }
+            },
+            {
+                path: '/help-and-support',
+                name: 'helpAndSupport',
+                component: () => import('@/pages/HelpAndSupport/Index.vue'),
+                meta: { title: 'Manage Help And Support', icon: 'HandHelping', roles: ['admin'] }
+            },
+            {
+                path: '/send-message',
+                name: 'sendMessage',
+                component: () => import('@/pages/SendMessage/Index.vue'),
+                meta: { title: 'Send Message', icon: 'Bell', roles: ['admin'] }
+            },
+            {
+                path: '/send-message/create',
+                name: 'sendMessageCreate',
+                component: () => import('@/pages/SendMessage/Create.vue'),
+                meta: { title: 'Send Message', icon: 'Bell', roles: ['admin'], hideInMenu: true }
             },
             {
                 path: '/settings',

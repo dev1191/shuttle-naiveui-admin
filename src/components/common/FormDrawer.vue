@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NButton, NSpace, NSwitch, NSelect, NRadio, NRadioGroup } from 'naive-ui'
+import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NButton, NSpace, NSwitch, NSelect, NRadio, NRadioGroup, NRadioButton, NDatePicker } from 'naive-ui'
+import AvatarUpload from '@/components/common/AvatarUpload.vue'
 import { useThemeStore } from '@/stores/theme'
 import { computed, ref, watch } from 'vue'
 import type { FormInst, FormRules } from 'naive-ui'
@@ -12,12 +13,15 @@ interface SelectOption {
 interface FormField {
   key: string
   label: string
-  type?: 'text' | 'textarea' | 'number' | 'switch' | 'select' | 'radio' | 'radio-group'
+  type?: 'text' | 'textarea' | 'number' | 'switch' | 'select' | 'radio' | 'radio-group' | 'datepicker' | 'upload'
   placeholder?: string
   required?: boolean
   disabled?: boolean
   options?: SelectOption[]  // For select type
   defaultValue?: any  // Default value for the field
+  dateType?: 'date' | 'datetime' | 'daterange' | 'datetimerange' | 'month' | 'year' | 'quarter' // For datepicker
+  valueFormat?: string // For datepicker value format
+  uploadLabel?: string // For upload component label
 }
 
 interface Props {
@@ -59,7 +63,7 @@ watch(() => props.modelValue, (newValue) => {
         resetData[field.key as keyof T] = field.defaultValue
       } else if (field.type === 'switch') {
         resetData[field.key as keyof T] = false as any
-      } else if (field.type === 'select' || field.type === 'radio' || field.type === 'radio-group') {
+      } else if (field.type === 'select' || field.type === 'radio' || field.type === 'radio-group' || field.type === 'datepicker' || field.type === 'upload') {
         resetData[field.key as keyof T] = null as any
       } else {
         resetData[field.key as keyof T] = '' as any
@@ -167,6 +171,25 @@ watch(show, (newShow) => {
               </NRadioButton>
        
           </NRadioGroup>
+
+          <!-- Date Picker Field -->
+          <NDatePicker
+            v-else-if="field.type === 'datepicker'"
+            v-model:value="formData[field.key as keyof T]"
+            :type="field.dateType || 'date'"
+            :value-format="field.valueFormat"
+            :placeholder="field.placeholder || `Select ${field.label.toLowerCase()}`"
+            :disabled="field.disabled"
+            clearable
+            style="width: 100%"
+          />
+
+          <!-- Upload Field -->
+          <AvatarUpload
+            v-else-if="field.type === 'upload'"
+            v-model="formData[field.key as keyof T]"
+            :label="field.uploadLabel || 'Upload Image'"
+          />
 
           <!-- Default Text/Number Input -->
           <NInput
