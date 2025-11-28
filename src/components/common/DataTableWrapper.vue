@@ -1,7 +1,31 @@
 <script setup lang="ts">
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import { NSelect, NSpace, NDataTable, NDatePicker, NButton } from "naive-ui";
+import type { DataTableSortState } from "naive-ui";
 import { useMessage } from "naive-ui";
+
+/**
+ * DataTableWrapper Component
+ * 
+ * A reusable data table wrapper with built-in features:
+ * - Pagination
+ * - Search
+ * - Filters (select, date, date-range)
+ * - Column Sorting (opt-in per column)
+ * - Export to CSV
+ * - Refresh
+ * 
+ * COLUMN SORTING:
+ * - Columns are NOT sortable by default
+ * - Add `sorter: true` to any column to enable sorting
+ * - The 'actions' column is never sortable
+ * - Example:
+ *   {
+ *     title: "Name",
+ *     key: "name",
+ *     sorter: true  // ← Must explicitly enable sorting
+ *   }
+ */
 
 /** Props */
 interface FilterOption {
@@ -22,6 +46,8 @@ const props = defineProps<{
     page: number;
     limit: number;
     totalPages: number;
+    sortBy:string
+    sortDesc:string
   }>;
   columns: any[];
   extraFilters?: FilterDefinition[];
@@ -50,7 +76,39 @@ const pagination = reactive({
   pageSizes: props.pageSizeOptions ?? [10, 20, 30, 50],
 });
 
+// Sort state
+const sortBy = ref<string>('createdAt');
+const sortOrder = ref<'ascend' | 'descend' | false>('descend');
+
 const scrollX = props.scrollX ?? 1000;
+
+/* ===========================================
+   COMPUTED COLUMNS WITH SORT
+   Dynamically adds sorting based on column configuration
+=========================================== */
+const columnsWithSort = computed(() => {
+  return props.columns.map(col => {
+    // Skip if no key or if it's the actions column
+    if (!col.key || col.key === 'actions') {
+      return col;
+    }
+    
+    // Check if column explicitly defines sorter property
+    // Only enable sorting if explicitly set to true or a function
+    const isSortable = col.sorter === true || typeof col.sorter === 'function';
+    
+    // Only add sorting if the column is sortable
+    if (isSortable) {
+      return {
+        ...col,
+        sorter: col.sorter, // Keep the original sorter value (true or function)
+        sortOrder: sortBy.value === col.key ? sortOrder.value : false
+      };
+    }
+    
+    return col;
+  });
+});
 
 /* ===========================================
    DATE FORMATTER
@@ -68,10 +126,15 @@ function formatDate(ts: number) {
    BUILD PARAMS
 =========================================== */
 function buildParams() {
+  // Convert Naive UI sortOrder to backend format
+  const sortDesc = sortOrder.value === 'descend' ? 'desc' : 'asc';
+  
   return {
     page: pagination.page,
     limit: pagination.pageSize,
     search: search.value,
+    sortBy: sortBy.value,
+    sortDesc: sortDesc,
     ...filters,
   };
 }
@@ -132,6 +195,32 @@ function onPageChange(page: number) {
 
 function onPageSizeChange(pageSize: number) {
   pagination.pageSize = pageSize;
+  pagination.page = 1;
+  loadData();
+}
+
+/* ===========================================
+   SORT HANDLER
+=========================================== */
+function handleSorterChange(sorter: DataTableSortState) {
+  if (!sorter || typeof sorter === 'boolean') {
+    // Reset to default sort
+    sortBy.value = 'createdAt';
+    sortOrder.value = 'descend';
+  } else if ('columnKey' in sorter) {
+    // Single column sort
+    sortBy.value = sorter.columnKey as string;
+    sortOrder.value = sorter.order || false;
+  } else if (Array.isArray(sorter) && sorter.length > 0) {
+    // Multiple column sort - use the first one
+    const firstSorter = sorter[0];
+    if (firstSorter && 'columnKey' in firstSorter) {
+      sortBy.value = firstSorter.columnKey as string;
+      sortOrder.value = firstSorter.order || false;
+    }
+  }
+  
+  // Reset to first page when sorting changes
   pagination.page = 1;
   loadData();
 }
@@ -279,13 +368,14 @@ defineExpose({
       <!-- Data Table -->
       <n-data-table
         v-else
-        :columns="columns"
+        :columns="columnsWithSort"
         :data="items"
         :loading="loading"
         :pagination="pagination"
         :remote="true"
         @update:page="onPageChange"
         @update:page-size="onPageSizeChange"
+        @update:sorter="handleSorterChange"
         :scroll-x="scrollX"
       />
     </n-space>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { referralsApi } from "@/services/referral.service";
 import { useRender } from "@/composables/useRender";
+import { PaymentStatus } from "@/types";
+import { usePayments } from "@/composables/usePayment";
 
-
-
-const { renderDate } = useRender()
+const { getStatusColor } = usePayments();
+const { renderDate, renderTag } = useRender();
 
 const columns = [
   {
@@ -17,7 +18,7 @@ const columns = [
     key: "referral",
     render: (row: any) => `${row.referral.firstname} ${row.referral.lastname}`,
   },
-    {
+  {
     title: "Income Earned",
     key: "amount",
     render: (row: any) => row.amount,
@@ -26,11 +27,18 @@ const columns = [
   {
     title: "Payment Status",
     key: "payment_status",
-    render: (row: any) => row.payment_status,
+    render: (row: any) =>
+      renderTag(
+        row.payment_status,
+        getStatusColor(row.payment_status),
+        PaymentStatus,
+        "PaymentStatus"
+      ),
   },
-      {
-    title: 'Created Date',
-    key: 'createdAt',
+  {
+    title: "Created Date",
+    key: "createdAt",
+    sorter: true, // Enable sorting
     render: (row: any) => renderDate(row.createdAt),
   },
 ];
@@ -47,12 +55,15 @@ async function fetchReferrals(params: Record<string, any>) {
 
 const extraFilters = [
   {
-    key: "status",
-    label: "Status",
+    key: "payment_status",
+    label: "Payment Status",
     type: "select",
     options: [
-      { label: "Active", value: true },
-      { label: "Inactive", value: false },
+      { label: "Processing", value: PaymentStatus.Processing },
+      { label: "Failed", value: PaymentStatus.Failed },
+      { label: "Pending", value: PaymentStatus.Pending },
+      { label: "Refunded", value: PaymentStatus.Refunded },
+      { label: "Completed", value: PaymentStatus.Completed },
     ],
   },
   {

@@ -1,5 +1,5 @@
 import { Trash2 as DeleteIcon, AlertTriangle as FailedIcon, Star as StarIcon, CheckCircle as SuccessIcon, MoreHorizontal } from 'lucide-vue-next'
-import { NBadge, NButton, NIcon, NImage, NPopconfirm, NSpace, NTag, NText, NDropdown } from 'naive-ui'
+import { NBadge, NButton, NIcon, NCard, NModal, NImage, NPopconfirm, NSpace, NTag, NText, NDropdown } from 'naive-ui'
 import { RouterLink } from 'vue-router'
 import { i18n } from '@/plugins/i18n'
 import defaultAvatar from '@/assets/images/avatar/default.png'
@@ -150,6 +150,79 @@ export function useRender() {
         )
     }
 
+
+    function renderConfirmAlertButton(
+        confirmMessage: string,
+        confirmAction: () => void,
+        iconColor?: string
+    ) {
+        const showModal = ref(false);
+
+        const open = () => (showModal.value = true);
+        const close = () => (showModal.value = false);
+
+        return h("div", [
+            // Button trigger
+            h(NButton, {
+                size: "medium",
+                quaternary: true,
+                circle: true,
+                renderIcon: () =>
+                    h(
+                        NIcon,
+                        { color: iconColor || "#d03050" },
+                        { default: () => h(DeleteIcon) }
+                    ),
+                onClick: open
+            }),
+
+            // Modal itself
+            h(
+                NModal,
+                {
+                    show: showModal.value,
+                    onUpdateShow: (v: boolean) => (showModal.value = v)
+                },
+                {
+                    default: () =>
+                        h(
+                            NCard,
+                            {
+                                style: "width: 360px;",
+                                title: "Confirm",
+                                bordered: false,
+                                size: "small"
+                            },
+                            {
+                                default: () => confirmMessage,
+                                footer: () =>
+                                    h("div", { class: "flex justify-end gap-2" }, [
+                                        h(
+                                            NButton,
+                                            { size: "small", quaternary: true, onClick: close },
+                                            { default: () => "Cancel" }
+                                        ),
+                                        h(
+                                            NButton,
+                                            {
+                                                size: "small",
+                                                type: "error",
+                                                onClick: () => {
+                                                    confirmAction();
+                                                    close();
+                                                }
+                                            },
+                                            { default: () => "Delete" }
+                                        )
+                                    ])
+                            }
+                        )
+                }
+            )
+        ]);
+    }
+
+
     function renderActionLabel(text: string, onClickAction: any) {
         return h(NText, { onClick: onClickAction }, { default: () => text })
     }
@@ -181,6 +254,7 @@ export function useRender() {
         renderConfirmStatus,
         renderActionLabel,
         renderDeleteActionButton,
-        renderDropdownMenu
+        renderDropdownMenu,
+        renderConfirmAlertButton
     }
 }

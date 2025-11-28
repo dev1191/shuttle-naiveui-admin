@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NButton, NSpace, NSwitch, NSelect } from 'naive-ui'
+import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NButton, NSpace, NSwitch, NSelect, NRadio, NRadioGroup } from 'naive-ui'
 import { useThemeStore } from '@/stores/theme'
 import { computed, ref, watch } from 'vue'
 import type { FormInst, FormRules } from 'naive-ui'
@@ -12,7 +12,7 @@ interface SelectOption {
 interface FormField {
   key: string
   label: string
-  type?: 'text' | 'textarea' | 'number' | 'switch' | 'select'
+  type?: 'text' | 'textarea' | 'number' | 'switch' | 'select' | 'radio' | 'radio-group'
   placeholder?: string
   required?: boolean
   disabled?: boolean
@@ -59,7 +59,7 @@ watch(() => props.modelValue, (newValue) => {
         resetData[field.key as keyof T] = field.defaultValue
       } else if (field.type === 'switch') {
         resetData[field.key as keyof T] = false as any
-      } else if (field.type === 'select') {
+      } else if (field.type === 'select' || field.type === 'radio' || field.type === 'radio-group') {
         resetData[field.key as keyof T] = null as any
       } else {
         resetData[field.key as keyof T] = '' as any
@@ -150,6 +150,23 @@ watch(show, (newShow) => {
             :disabled="field.disabled"
             :rows="4"
           />
+
+          <!-- Radio Group Field -->
+          <NRadioGroup
+            v-else-if="field.type === 'radio' || field.type === 'radio-group'"
+            v-model:value="formData[field.key as keyof T]"
+            :disabled="field.disabled"
+          >
+         
+              <NRadioButton
+                v-for="option in field.options || []"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </NRadioButton>
+       
+          </NRadioGroup>
 
           <!-- Default Text/Number Input -->
           <NInput

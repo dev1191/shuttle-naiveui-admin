@@ -2,17 +2,17 @@ export interface Customer {
     ids: string
     picture: string
     fullname: string
-    firstName: string
-    lastName: string
+    firstname: string
+    lastname: string
     email: string
     country_code: string
     phone: string
-    dateOfBirth: number | null
+    wallet_balance: number | string
     address: string
     city: string
     state: string
     zipCode: string
-    licenseNumber: string
+    gender: string
     licenseExpiry: number | null
     licenseClass: string
     vehicleType: string
