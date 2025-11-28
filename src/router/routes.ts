@@ -35,20 +35,34 @@ const routes: RouteRecordRaw[] = [
                 path: '/dashboard',
                 name: 'dashboard',
                 component: () => import('@/pages/Dashboard/Index.vue'),
-                meta: { title: 'Dashboard', icon: 'BarChart', roles: ['admin', 'manager', 'staff'] }
+                meta: { title: 'Dashboard', icon: 'LayoutDashboard', roles: ['admin', 'manager', 'staff'] }
             },
             {
-                path: '/users',
-                name: 'users',
-                component: () => import('@/pages/Users/List.vue'),
-                meta: { title: 'Users', icon: 'Users', roles: ['admin'] }
+                path: '/admin-users',
+                name: 'adminUsers',
+                meta: { title: 'Manage Admin Users', icon: 'Users', roles: ['admin', 'manager'] },
+                children: [
+                    {
+                        path: 'list',
+                        name: 'usersList',
+                        component: () => import('@/pages/Users/List.vue'),
+                        meta: { title: 'Users List', icon: 'UsersRound', roles: ['admin'] }
+                    },
+                    {
+                        path: '/roles',
+                        name: 'roles',
+                        component: () => import('@/pages/RoleAndPermissions/Roles/Index.vue'),
+                        meta: { title: 'Roles', icon: 'Shield', roles: ['admin'] }
+                    },
+                    {
+                        path: '/roles/:id',
+                        name: 'role',
+                        component: () => import('@/pages/RoleAndPermissions/Roles/_id.vue'),
+                        meta: { title: 'Role', icon: 'Shield', roles: ['admin'], hideInMenu: true }
+                    }
+                ]
             },
-            {
-                path: '/roles',
-                name: 'roles',
-                component: () => import('@/pages/RoleAndPermissions/Roles/Index.vue'),
-                meta: { title: 'Roles', icon: 'Shield', roles: ['admin'] }
-            },
+
             {
                 path: '/buses',
                 name: 'buses',

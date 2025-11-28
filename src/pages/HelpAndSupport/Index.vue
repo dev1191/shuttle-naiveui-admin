@@ -15,6 +15,7 @@ const message = useMessage();
 const { t } = useI18n();
 const viewingHelper = ref();
 const showViewModal = ref(false);
+const tableRef= ref(null)
 const columns = [
   {
     title: "Ticket No",

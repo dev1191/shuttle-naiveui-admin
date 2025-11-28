@@ -20,6 +20,7 @@ import { discrete } from "@/composables";
 import { useRouter } from "vue-router";
 import { Eye, Edit2, Wallet, List, Trash2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
+import { useAuthStore } from "@/stores/auth";
 
 const {
   renderUserAvatar,
@@ -31,6 +32,7 @@ const {
 const message = useMessage();
 const router = useRouter();
 const { t } = useI18n();
+const authStore = useAuthStore();
 
 // State for Edit Drawer
 const showEditDrawer = ref(false);
@@ -81,13 +83,29 @@ const editFormFields = [
 ];
 
 function getActionOptions(row: Customer) {
-  return [
-    { key: "view", label: "View", icon: renderIcon(Eye) },
-    { key: "edit", label: "Edit", icon: renderIcon(Edit2) },
-    { key: "wallet", label: "Wallet Histories", icon: renderIcon(Wallet) },
-    { key: "bookings", label: "Booking Histories", icon: renderIcon(List) },
-    { key: "delete", label: "Delete", icon: renderIcon(Trash2) },
-  ];
+  const options = [];
+  
+  if (authStore.hasPermission('customer.view')) {
+    options.push({ key: "view", label: "View", icon: renderIcon(Eye) });
+  }
+  
+  if (authStore.hasPermission('customer.update')) {
+    options.push({ key: "edit", label: "Edit", icon: renderIcon(Edit2) });
+  }
+  
+  if (authStore.hasPermission('customer.wallet_history')) {
+    options.push({ key: "wallet", label: "Wallet Histories", icon: renderIcon(Wallet) });
+  }
+  
+  if (authStore.hasPermission('customer.booking_history')) {
+    options.push({ key: "bookings", label: "Booking Histories", icon: renderIcon(List) });
+  }
+  
+  if (authStore.hasPermission('customer.delete')) {
+    options.push({ key: "delete", label: "Delete", icon: renderIcon(Trash2) });
+  }
+
+  return options;
 }
 
 function handleAction(key: string | number, row: Customer) {

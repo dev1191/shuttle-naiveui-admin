@@ -5,6 +5,9 @@ enums:
   CustomerStatus:
     Active: Active
     Inactive: Inactive
+  AdminStatus:
+    Active: Active
+    Inactive: Inactive
   PaymentStatus:
     Cancelled: Cancelled
     Processing: Processing

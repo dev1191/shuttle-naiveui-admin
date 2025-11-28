@@ -78,7 +78,8 @@ export const useAuthStore = defineStore('auth', () => {
         setPermissions,
         clearAuth,
         login,
-        logout
+        logout,
+        hasPermission: (permission: string) => permissions.value.includes(permission)
     }
 }, {
     persist: {

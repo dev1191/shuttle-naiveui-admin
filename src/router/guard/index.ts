@@ -34,6 +34,19 @@ export function createRouterGuard(router: Router) {
             }
         }
 
+        // Check permission-based access
+        if (to.meta?.permissions && authStore.isLoggedIn) {
+            const requiredPermissions = to.meta.permissions as string[]
+            // Check if user has at least one of the required permissions
+            const hasAccess = requiredPermissions.some(p => authStore.hasPermission(p))
+
+            if (!hasAccess) {
+                discrete.loadingBar?.finish()
+                discrete.message?.error('You do not have permission to access this page')
+                return next({ name: 'dashboard' })
+            }
+        }
+
         next()
     });
 
