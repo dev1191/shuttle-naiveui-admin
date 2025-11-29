@@ -15,6 +15,7 @@ enums:
     Pending: Pending
     Completed: Completed
     Refunded: Refunded
+    Replied: Replied
 common:
   403Error: You have not Permission to access
   404Error: 404 Error
@@ -96,3 +97,5 @@ settings:
     title: Terms & Conditions Settings
   privacy:
     title: Privacy Policy Settings
+  pages:
+    title: Pages

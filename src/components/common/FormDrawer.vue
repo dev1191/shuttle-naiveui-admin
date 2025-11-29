@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NButton, NSpace, NSwitch, NSelect, NRadio, NRadioGroup, NRadioButton, NDatePicker } from 'naive-ui'
+import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NInputNumber, NButton, NSpace, NSwitch, NSelect, NRadio, NRadioGroup, NRadioButton, NDatePicker } from 'naive-ui'
 import AvatarUpload from '@/components/common/AvatarUpload.vue'
+import RichTextEditor from '@/components/common/RichTextEditor.vue'
 import { useThemeStore } from '@/stores/theme'
 import { computed, ref, watch } from 'vue'
 import type { FormInst, FormRules } from 'naive-ui'
@@ -13,7 +14,7 @@ interface SelectOption {
 interface FormField {
   key: string
   label: string
-  type?: 'text' | 'textarea' | 'number' | 'switch' | 'select' | 'radio' | 'radio-group' | 'datepicker' | 'upload'
+  type?: 'text' | 'textarea' | 'number' | 'switch' | 'select' | 'radio' | 'radio-group' | 'datepicker' | 'upload' | 'editor'
   placeholder?: string
   required?: boolean
   disabled?: boolean
@@ -26,14 +27,18 @@ interface FormField {
 
 interface Props {
   title: string
-  fields: FormField[]
+  fields?: FormField[]
+  rules?: FormRules
   modelValue?: T | null
   loading?: boolean
+  width?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: null,
-  loading: false
+  loading: false,
+  fields: () => [],
+  width: 500
 })
 
 const emit = defineEmits<{
@@ -57,18 +62,20 @@ watch(() => props.modelValue, (newValue) => {
   } else {
     // Reset form when no modelValue
     const resetData = {} as T
-    props.fields.forEach(field => {
-      // Set default values based on field type
-      if (field.defaultValue !== undefined) {
-        resetData[field.key as keyof T] = field.defaultValue
-      } else if (field.type === 'switch') {
-        resetData[field.key as keyof T] = false as any
-      } else if (field.type === 'select' || field.type === 'radio' || field.type === 'radio-group' || field.type === 'datepicker' || field.type === 'upload') {
-        resetData[field.key as keyof T] = null as any
-      } else {
-        resetData[field.key as keyof T] = '' as any
-      }
-    })
+    if (props.fields) {
+      props.fields.forEach(field => {
+        // Set default values based on field type
+        if (field.defaultValue !== undefined) {
+          resetData[field.key as keyof T] = field.defaultValue
+        } else if (field.type === 'switch') {
+          resetData[field.key as keyof T] = false as any
+        } else if (field.type === 'select' || field.type === 'radio' || field.type === 'radio-group' || field.type === 'datepicker' || field.type === 'upload') {
+          resetData[field.key as keyof T] = null as any
+        } else {
+          resetData[field.key as keyof T] = '' as any
+        }
+      })
+    }
     formData.value = resetData
   }
 }, { immediate: true })
@@ -76,16 +83,18 @@ watch(() => props.modelValue, (newValue) => {
 // Generate validation rules
 const rules = computed<FormRules>(() => {
   const generatedRules: FormRules = {}
-  props.fields.forEach(field => {
-    if (field.required) {
-      generatedRules[field.key] = {
-        required: true,
-        message: `${field.label} is required`,
-        trigger: field.type === 'switch' ? ['change'] : ['blur', 'input', 'change']
+  if (props.fields) {
+    props.fields.forEach(field => {
+      if (field.required) {
+        generatedRules[field.key] = {
+          required: true,
+          message: `${field.label} is required`,
+          trigger: field.type === 'switch' ? ['change'] : ['blur', 'input', 'change']
+        }
       }
-    }
-  })
-  return generatedRules
+    })
+  }
+  return { ...generatedRules, ...props.rules }
 })
 
 const handleSubmit = async () => {
@@ -113,7 +122,7 @@ watch(show, (newShow) => {
 </script>
 
 <template>
-  <NDrawer v-model:show="show" :width="400" :placement="placement">
+  <NDrawer v-model:show="show" :width="width" :placement="placement">
     <NDrawerContent :title="title">
       <NForm
         ref="formRef"
@@ -122,84 +131,105 @@ watch(show, (newShow) => {
         label-placement="top"
         require-mark-placement="right-hanging"
       >
-        <NFormItem
-          v-for="field in fields"
-          :key="field.key"
-          :label="field.label"
-          :path="field.key"
-        >
-          <!-- Switch Field -->
-          <NSwitch
-            v-if="field.type === 'switch'"
-            v-model:value="formData[field.key as keyof T]"
-            :disabled="field.disabled"
-          />
+        <slot :model="formData"></slot>
 
-          <!-- Select Field -->
-          <NSelect
-            v-else-if="field.type === 'select'"
-            v-model:value="formData[field.key as keyof T]"
-            :options="field.options || []"
-            :placeholder="field.placeholder || `Select ${field.label.toLowerCase()}`"
-            :disabled="field.disabled"
-            clearable
-          />
-
-          <!-- Textarea Field -->
-          <NInput
-            v-else-if="field.type === 'textarea'"
-            v-model:value="formData[field.key as keyof T]"
-            type="textarea"
-            :placeholder="field.placeholder || `Enter ${field.label.toLowerCase()}`"
-            :disabled="field.disabled"
-            :rows="4"
-          />
-
-          <!-- Radio Group Field -->
-          <NRadioGroup
-            v-else-if="field.type === 'radio' || field.type === 'radio-group'"
-            v-model:value="formData[field.key as keyof T]"
-            :disabled="field.disabled"
+        <template v-if="fields && fields.length > 0">
+          <NFormItem
+            v-for="field in fields"
+            :key="field.key"
+            :label="field.label"
+            :path="field.key"
           >
+            <!-- Switch Field -->
+            <NSwitch
+              v-if="field.type === 'switch'"
+              v-model:value="formData[field.key as keyof T]"
+              :disabled="field.disabled"
+            />
+
+            <!-- Select Field -->
+            <NSelect
+              v-else-if="field.type === 'select'"
+              v-model:value="formData[field.key as keyof T]"
+              :options="field.options || []"
+              :placeholder="field.placeholder || `Select ${field.label.toLowerCase()}`"
+              :disabled="field.disabled"
+              clearable
+            />
+
+            <!-- Textarea Field -->
+            <NInput
+              v-else-if="field.type === 'textarea'"
+              v-model:value="formData[field.key as keyof T]"
+              type="textarea"
+              :placeholder="field.placeholder || `Enter ${field.label.toLowerCase()}`"
+              :disabled="field.disabled"
+              :rows="4"
+            />
+
+            <!-- Radio Group Field -->
+            <NRadioGroup
+              v-else-if="field.type === 'radio' || field.type === 'radio-group'"
+              v-model:value="formData[field.key as keyof T]"
+              :disabled="field.disabled"
+            >
+           
+                <NRadioButton
+                  v-for="option in field.options || []"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                </NRadioButton>
          
-              <NRadioButton
-                v-for="option in field.options || []"
-                :key="option.value"
-                :value="option.value"
-              >
-                {{ option.label }}
-              </NRadioButton>
-       
-          </NRadioGroup>
+            </NRadioGroup>
 
-          <!-- Date Picker Field -->
-          <NDatePicker
-            v-else-if="field.type === 'datepicker'"
-            v-model:value="formData[field.key as keyof T]"
-            :type="field.dateType || 'date'"
-            :value-format="field.valueFormat"
-            :placeholder="field.placeholder || `Select ${field.label.toLowerCase()}`"
-            :disabled="field.disabled"
-            clearable
-            style="width: 100%"
-          />
+            <!-- Date Picker Field -->
+            <NDatePicker
+              v-else-if="field.type === 'datepicker'"
+              v-model:value="formData[field.key as keyof T]"
+              :type="field.dateType || 'date'"
+              :value-format="field.valueFormat"
+              :placeholder="field.placeholder || `Select ${field.label.toLowerCase()}`"
+              :disabled="field.disabled"
+              clearable
+              style="width: 100%"
+            />
 
-          <!-- Upload Field -->
-          <AvatarUpload
-            v-else-if="field.type === 'upload'"
-            v-model="formData[field.key as keyof T]"
-            :label="field.uploadLabel || 'Upload Image'"
-          />
+            <!-- Upload Field -->
+            <AvatarUpload
+              v-else-if="field.type === 'upload'"
+              v-model="formData[field.key as keyof T]"
+              :label="field.uploadLabel || 'Upload Image'"
+            />
 
-          <!-- Default Text/Number Input -->
-          <NInput
-            v-else
-            v-model:value="formData[field.key as keyof T]"
-            :type="field.type || 'text'"
-            :placeholder="field.placeholder || `Enter ${field.label.toLowerCase()}`"
-            :disabled="field.disabled"
-          />
-        </NFormItem>
+            <!-- Editor Field -->
+            <RichTextEditor
+              v-else-if="field.type === 'editor'"
+              v-model="formData[field.key as keyof T]"
+              :placeholder="field.placeholder || `Enter ${field.label.toLowerCase()}`"
+              :read-only="field.disabled"
+            />
+
+            <!-- Number Field -->
+            <NInputNumber
+              v-else-if="field.type === 'number'"
+              v-model:value="formData[field.key as keyof T]"
+              :placeholder="field.placeholder || `Enter ${field.label.toLowerCase()}`"
+              :disabled="field.disabled"
+              clearable
+            />
+
+            <!-- Default Text Input -->
+            <NInput
+              v-else
+              v-model:value="formData[field.key as keyof T]"
+              :type="(field.type === 'text' || field.type === 'textarea' || field.type === 'password') ? field.type : 'text'"
+              :placeholder="field.placeholder || `Enter ${field.label.toLowerCase()}`"
+              :disabled="field.disabled"
+            />
+          </NFormItem>
+        </template>
       </NForm>
 
       <template #footer>

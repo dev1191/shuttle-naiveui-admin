@@ -10,7 +10,8 @@ import {
   Warehouse as StorageIcon,
   Share as ShareIcon,
   TicketSlash as RefundIcon,
-  Megaphone as NotificationIcon
+  Megaphone as NotificationIcon,
+  Layers as PageIcon
 } from 'lucide-vue-next';
 
 import { useRender } from '@/composables/useRender';
@@ -66,6 +67,11 @@ const menuOptions = [
     label: () => h(RouterLink, { to: { name: 'storageSettings' } }, { default: () => t('settings.storage.title') }),
     key: 'storage',
     icon: renderIcon(StorageIcon)
+  },
+  {
+    label: () => h(RouterLink, { to: { name: 'pages' } }, { default: () => t('settings.pages.title') }),
+    key: 'pages',
+    icon: renderIcon(PageIcon)
   },
 ];
 

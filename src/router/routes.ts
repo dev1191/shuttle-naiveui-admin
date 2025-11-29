@@ -203,50 +203,56 @@ const routes: RouteRecordRaw[] = [
                         path: 'countries',
                         name: 'countries',
                         component: () => import('@/pages/Settings/Countries/Index.vue'),
-                        meta: { title: 'Countries', roles: ['admin', 'manager'] }
+                        meta: { title: 'Countries', roles: ['admin', 'manager'], hideInMenu: true }
                     },
                     {
                         path: 'currencies',
                         name: 'currencies',
                         component: () => import('@/pages/Settings/Currencies/Index.vue'),
-                        meta: { title: 'Currencies', roles: ['admin', 'manager'] }
+                        meta: { title: 'Currencies', roles: ['admin', 'manager'], hideInMenu: true }
                     },
                     {
                         path: 'languages',
                         name: 'languages',
                         component: () => import('@/pages/Settings/Languages/Index.vue'),
-                        meta: { title: 'Languages', roles: ['admin', 'manager'] }
+                        meta: { title: 'Languages', roles: ['admin', 'manager'], hideInMenu: true }
                     },
                     {
                         path: 'emailSettings',
                         name: 'emailSettings',
                         component: () => import('@/pages/Settings/Email/Index.vue'),
-                        meta: { title: 'Email Settings', roles: ['admin', 'manager'] }
+                        meta: { title: 'Email Settings', roles: ['admin', 'manager'], hideInMenu: true }
                     },
                     {
                         path: 'storageSettings',
                         name: 'storageSettings',
                         component: () => import('@/pages/Settings/Storage/Index.vue'),
-                        meta: { title: 'Storage Settings', roles: ['admin', 'manager'] }
+                        meta: { title: 'Storage Settings', roles: ['admin', 'manager'], hideInMenu: true }
                     },
                     {
                         path: 'referralSettings',
                         name: 'referralSettings',
                         component: () => import('@/pages/Settings/Referral/Index.vue'),
-                        meta: { title: 'Referral Settings', roles: ['admin', 'manager'] }
+                        meta: { title: 'Referral Settings', roles: ['admin', 'manager'], hideInMenu: true }
                     },
                     {
                         path: 'notificationSettings',
                         name: 'notificationSettings',
                         component: () => import('@/pages/Settings/Notification/Index.vue'),
-                        meta: { title: 'Notification Settings', roles: ['admin', 'manager'] }
+                        meta: { title: 'Notification Settings', roles: ['admin', 'manager'], hideInMenu: true }
                     },
                     {
                         path: 'refundSettings',
                         name: 'refundSettings',
                         component: () => import('@/pages/Settings/Refund/Index.vue'),
-                        meta: { title: 'Refund Settings', roles: ['admin', 'manager'] }
-                    }
+                        meta: { title: 'Refund Settings', roles: ['admin', 'manager'], hideInMenu: true }
+                    },
+                    {
+                        path: 'pages',
+                        name: 'pages',
+                        component: () => import('@/pages/Settings/Page/Index.vue'),
+                        meta: { title: 'Pages', roles: ['admin', 'manager'], hideInMenu: true }
+                    },
                 ]
             },
         ]

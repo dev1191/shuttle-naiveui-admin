@@ -76,7 +76,7 @@ export function useRender() {
             { align: 'center' },
             {
                 default: () => [
-                    h(NImage, {
+                    image ? h(NImage, {
                         src: image,
                         fallbackSrc: defaultAvatar,
                         width: 38,
@@ -84,7 +84,7 @@ export function useRender() {
                         objectFit: 'contain',
                         showToolbar: false,
                         style: { 'border-radius': '50%' }
-                    }),
+                    }) : null,
                     h('div', { class: 'flex flex-col' }, [
                         h(NText, { depth: 1, strong: true }, { default: () => username }),
                         email && h(NText, { depth: 3, size: 'small', class: 'text-xs' }, { default: () => email })
