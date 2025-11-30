@@ -94,8 +94,12 @@ const activeKey = ref<string | null>(route.name as string);
         />
       </NLayoutSider>
 
-      <NLayoutContent class="py-6 px-6">
-        <slot />
+      <NLayoutContent class="py-4 px-4">
+        <Heading :title="props.title" :description="props.description" />
+        <div class="py-6">
+            <slot />
+          </div>
+      
       </NLayoutContent>
     </NLayout>
   </div>

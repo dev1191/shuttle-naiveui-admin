@@ -38,6 +38,12 @@ const routes: RouteRecordRaw[] = [
                 meta: { title: 'Dashboard', icon: 'LayoutDashboard', roles: ['admin', 'manager', 'staff'] }
             },
             {
+                path: '/eagle-eye',
+                name: 'eagleEye',
+                component: () => import('@/pages/EagleEye/Index.vue'),
+                meta: { title: 'Eagle Eye', icon: 'Map', roles: ['admin', 'manager', 'staff'] }
+            },
+            {
                 path: '/admin-users',
                 name: 'adminUsers',
                 meta: { title: 'Manage Admin Users', icon: 'Users', roles: ['admin', 'manager'] },
@@ -92,6 +98,31 @@ const routes: RouteRecordRaw[] = [
                         component: () => import('@/pages/ManageBuses/BusLayout/Index.vue'),
                         meta: { title: 'Bus Layouts List', roles: ['admin', 'manager'] }
                     },
+                ]
+            },
+            {
+                path: 'manage-routes',
+                name: 'manageRoutes',
+                meta: { title: 'Manage Routes', icon: 'Car', roles: ['admin', 'manager'] },
+                children: [
+                    {
+                        path: 'list',
+                        name: 'routesList',
+                        component: () => import('@/pages/ManageRoutes/Stops/List.vue'),
+                        meta: { title: 'Routes List', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'create',
+                        name: 'createStop',
+                        component: () => import('@/pages/ManageRoutes/Stops/Create.vue'),
+                        meta: { title: 'Create Stop', roles: ['admin', 'manager'] }
+                    },
+                    // {
+                    //     path: 'edit/:id',
+                    //     name: 'editRoute',
+                    //     component: () => import('@/pages/ManageRoutes/Edit.vue'),
+                    //     meta: { title: 'Edit Route', roles: ['admin', 'manager'] }
+                    // }
                 ]
             },
             {

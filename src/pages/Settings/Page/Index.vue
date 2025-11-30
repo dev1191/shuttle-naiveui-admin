@@ -67,7 +67,7 @@ const handleEdit = (page: Page) => {
 
 const handleDelete = async (page: Page) => {
   try {
-    const response = await pagesApi.delete(page.ids);
+    const response = await pagesApi.delete(page._id);
     message.success(response.message);
     if (response.status) {
       loadData();
@@ -112,8 +112,13 @@ const handleSubmit = async (data: Page) => {
     loadData();
   } catch (error: any) {
     // Handle specific error cases
-    if (error.response?.status === 409 || error.response?.data?.message?.includes('already exists')) {
-      message.error("This page already exists. Please use a different name or code.");
+    if (
+      error.response?.status === 409 ||
+      error.response?.data?.message?.includes("already exists")
+    ) {
+      message.error(
+        "This page already exists. Please use a different name or code."
+      );
     } else if (error.response?.data?.message) {
       message.error(error.response.data.message);
     } else {
@@ -133,7 +138,7 @@ const handleTitleUpdate = (value: string, model: Page) => {
   model.title = value;
   // For simplicity, we'll just update it if it's not being manually edited
   if (!selectedPage.value) {
-     model.slug = kebabCase(value);
+    model.slug = kebabCase(value);
   }
 };
 
@@ -187,48 +192,58 @@ function loadData() {
       :model-value="selectedPage"
       :loading="loading"
       :rules="rules"
-      :width="800"
+      :width="750"
       @submit="handleSubmit"
       @cancel="handleCancel"
     >
       <template #default="{ model }">
-        <NFormItem label="Title" path="title">
-          <NInput 
-            :value="model.title" 
-            @update:value="(val) => handleTitleUpdate(val, model)"
-            placeholder="Page Title" 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <NFormItem label="Title" path="title">
+            <NInput
+              :value="model.title"
+              @update:value="(val) => handleTitleUpdate(val, model)"
+              placeholder="Page Title"
+            />
+          </NFormItem>
+
+          <FormInput
+            v-model="model.slug"
+            label="Slug"
+            path="slug"
+            placeholder="Enter slug"
           />
-        </NFormItem>
-        
-        <NFormItem label="Slug" path="slug">
-          <NInput v-model:value="model.slug" placeholder="page-slug" />
-        </NFormItem>
-        
+        </div>
+
         <NFormItem label="Content" path="content">
-          <RichTextEditor
-            v-model="model.content"
-            placeholder="Page Content"
-          />
+          <RichTextEditor v-model="model.content" placeholder="Page Content" />
         </NFormItem>
 
         <NDivider title-placement="left">SEO Settings</NDivider>
 
-        <NFormItem label="Meta Title" path="meta_title">
-          <NInput v-model:value="model.meta_title" placeholder="Meta Title" />
-        </NFormItem>
-        
-        <NFormItem label="Meta Description" path="meta_description">
-          <NInput
-            v-model:value="model.meta_description"
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            v-model="model.meta_title"
+            label="Meta Title"
+            path="meta_title"
+            placeholder="Enter meta title"
+          />
+
+          <FormInput
             type="textarea"
-            placeholder="Meta Description"
+            v-model="model.meta_description"
+            label="Meta Description"
+            path="meta_description"
+            placeholder="Enter meta description"
             :rows="3"
           />
-        </NFormItem>
-        
-        <NFormItem label="Meta Keywords" path="meta_keywords">
-          <NInput v-model:value="model.meta_keywords" placeholder="keyword1, keyword2" />
-        </NFormItem>
+        </div>
+
+        <FormInput
+          v-model="model.meta_keywords"
+          label="Meta Keywords"
+          path="meta_keywords"
+          placeholder="Enter meta keywords"
+        />
 
         <NFormItem label="Status" path="status">
           <NSwitch v-model:value="model.status" />

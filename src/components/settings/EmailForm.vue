@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import { ref, watch, type PropType } from "vue";
+import { ref, watch, computed, type PropType } from "vue";
 import {
   NForm,
   NFormItem,
   NInput,
-  NSwitch,
+  NRadioGroup,
+  NRadioButton,
   NSelect,
   NButton,
   NSpace,
   NSpin,
+  NGrid,
+  NGi,
 } from "naive-ui";
 import { useMessage } from "naive-ui";
 import type { FormInst, FormRules } from "naive-ui";
 import type { EmailSettings } from "@/types/settings/email";
+import { settingsApi } from "@/services/setting.service";
 
 const props = defineProps({
   item: {
@@ -37,6 +41,7 @@ const formData = ref<EmailSettings>({
   encryption: "tls",
   email: "",
   name: "",
+  apiKey: "",
 });
 
 const encryptionOptions = [
@@ -47,54 +52,70 @@ const encryptionOptions = [
 
 const typeOptions = [
   { label: "SMTP", value: "SMTP" },
-  { label: "SendGrid", value: "SendGrid" },
-  { label: "Mailgun", value: "Mailgun" },
+  { label: "Resend", value: "Resend" },
 ];
 
-const rules: FormRules = {
-  type: {
-    required: true,
-    message: "Email type is required",
-    trigger: ["blur", "change"],
-  },
-  username: {
-    required: true,
-    message: "Username is required",
-    trigger: ["blur", "input"],
-  },
-  host: {
-    required: true,
-    message: "Host is required",
-    trigger: ["blur", "input"],
-  },
-  password: {
-    required: true,
-    message: "Password is required",
-    trigger: ["blur", "input"],
-  },
-  port: {
-    required: true,
-    type: "number",
-    message: "Port is required",
-    trigger: ["blur", "input"],
-  },
-  encryption: {
-    required: true,
-    message: "Encryption type is required",
-    trigger: ["blur", "change"],
-  },
-  email: {
-    required: true,
-    type: "email",
-    message: "Valid email is required",
-    trigger: ["blur", "input"],
-  },
-  name: {
-    required: true,
-    message: "Name is required",
-    trigger: ["blur", "input"],
-  },
-};
+const rules = computed<FormRules>(() => {
+  const commonRules = {
+    type: {
+      required: true,
+      message: "Email type is required",
+      trigger: ["blur", "change"],
+    },
+    email: {
+      required: true,
+      type: "email",
+      message: "Valid email is required",
+      trigger: ["blur", "input"],
+    },
+    name: {
+      required: true,
+      message: "Name is required",
+      trigger: ["blur", "input"],
+    },
+  };
+
+  if (formData.value.type === "Resend") {
+    return {
+      ...commonRules,
+      apiKey: {
+        required: true,
+        message: "API Key is required",
+        trigger: ["blur", "input"],
+      },
+    };
+  }
+
+  return {
+    ...commonRules,
+    username: {
+      required: true,
+      message: "Username is required",
+      trigger: ["blur", "input"],
+    },
+    host: {
+      required: true,
+      message: "Host is required",
+      trigger: ["blur", "input"],
+    },
+    password: {
+      required: true,
+      message: "Password is required",
+      trigger: ["blur", "input"],
+    },
+    port: {
+      required: true,
+      type: "number",
+      message: "Port is required",
+      trigger: ["blur", "input"],
+    },
+    encryption: {
+      required: true,
+      message: "Encryption type is required",
+      trigger: ["blur", "change"],
+    },
+  };
+});
 
 // Watch for props.item changes and populate form
 watch(
@@ -107,10 +128,11 @@ watch(
         username: newItem.username || "",
         host: newItem.host || "",
         password: newItem.password || "",
-        port: parseInt(newItem.port) || 587,
+        port: Number(newItem.port) || 587,
         encryption: newItem.encryption || "tls",
         email: newItem.email || "",
         name: newItem.name || "",
+        apiKey: newItem.apiKey || "",
       };
     }
   },
@@ -125,11 +147,7 @@ const handleSubmit = async () => {
     await formRef.value.validate();
     saving.value = true;
 
-    // TODO: Replace with actual API call
-    // await emailApi.updateSettings(formData.value)
-
-    // Mock save
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await settingsApi.update("smtp", formData.value);
 
     message.success("Email settings saved successfully");
   } catch (error: any) {
@@ -155,11 +173,7 @@ const handleTestConnection = async () => {
     await formRef.value.validate();
     loading.value = true;
 
-    // TODO: Replace with actual API call
-    // await emailApi.testConnection(formData.value)
-
-    // Mock test
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await settingsApi.update("smtp", formData.value);
 
     message.success("Email connection test successful!");
   } catch (error: any) {
@@ -190,15 +204,19 @@ const handleTestConnection = async () => {
       <NGrid :cols="2" :x-gap="24" :y-gap="16">
         <NGi>
           <NFormItem label="Email Service Type" path="type">
-            <NSelect
-              v-model:value="formData.type"
-              :options="typeOptions"
-              placeholder="Select email service type"
-            />
+            <NRadioGroup v-model:value="formData.type" :options="typeOptions">
+              <NRadioButton
+                v-for="option in typeOptions"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </NRadioButton>
+            </NRadioGroup>
           </NFormItem>
         </NGi>
 
-        <NGi>
+        <NGi v-if="formData.type === 'SMTP'">
           <FormInput
             v-model="formData.host"
             label="SMTP Host"
@@ -208,7 +226,7 @@ const handleTestConnection = async () => {
           />
         </NGi>
 
-        <NGi>
+        <NGi v-if="formData.type === 'SMTP'">
           <FormInput
             type="number"
             v-model="formData.port"
@@ -219,7 +237,7 @@ const handleTestConnection = async () => {
           />
         </NGi>
 
-        <NGi>
+        <NGi v-if="formData.type === 'SMTP'">
           <NFormItem label="Encryption" path="encryption">
             <NSelect
               v-model:value="formData.encryption"
@@ -229,7 +247,7 @@ const handleTestConnection = async () => {
           </NFormItem>
         </NGi>
 
-        <NGi>
+        <NGi v-if="formData.type === 'SMTP'">
           <NFormItem label="Username" path="username">
             <NInput
               v-model:value="formData.username"
@@ -238,7 +256,7 @@ const handleTestConnection = async () => {
           </NFormItem>
         </NGi>
 
-        <NGi>
+        <NGi v-if="formData.type === 'SMTP'">
           <NFormItem label="Password" path="password">
             <NInput
               v-model:value="formData.password"
@@ -247,6 +265,17 @@ const handleTestConnection = async () => {
               placeholder="SMTP password"
             />
           </NFormItem>
+        </NGi>
+
+        <NGi v-if="formData.type === 'Resend'">
+          <FormInput
+            type="text"
+            v-model="formData.apiKey"
+            label="API Key"
+            path="apiKey"
+            placeholder="Enter API Key"
+            required
+          />
         </NGi>
 
         <NGi>

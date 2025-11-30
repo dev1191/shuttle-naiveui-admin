@@ -12,4 +12,5 @@ const settingsApiService = createApiService<any>('/settings')
 export const settingsApi = {
 
     getById: settingsApiService.getById.bind(settingsApiService),
+    update: settingsApiService.update.bind(settingsApiService),
 }

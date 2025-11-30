@@ -8,4 +8,5 @@ export interface EmailSettings {
     encryption: string;  // e.g., "tls" | "ssl"
     email: string;
     name: string;
+    apiKey?: string
 }

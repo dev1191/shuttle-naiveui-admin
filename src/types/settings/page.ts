@@ -1,7 +1,7 @@
 
 
 export interface Page {
-    ids: string;
+    _id: string;
     title: string;
     slug: string;
     content: string;
@@ -40,7 +40,7 @@ export interface CreatePageDTO {
 }
 
 export interface UpdatePageDTO {
-    ids?: string
+    _id?: string
     title: string;
     slug: string;
     content: string;
