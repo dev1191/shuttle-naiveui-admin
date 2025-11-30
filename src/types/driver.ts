@@ -17,6 +17,7 @@ export interface Driver {
     licenseClass: string
     vehicleType: string
     status: DriverStatus
+    duty_status: string
     createdAt?: string
     updatedAt?: string
 }
