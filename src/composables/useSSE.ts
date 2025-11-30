@@ -2,6 +2,16 @@
 import { ref, onUnmounted } from 'vue';
 import type { Driver } from '@/types/driver';
 
+// SSE message data structure
+interface SSEMessageData {
+    type: 'initial' | 'update';
+    groups: {
+        ONLINE: Driver[];
+        TRACKING: Driver[];
+        OFFLINE: Driver[];
+    };
+}
+
 export function useSSE() {
     const eventSource = ref<EventSource | null>(null);
     const isConnected = ref(false);
@@ -9,7 +19,7 @@ export function useSSE() {
 
     const connect = (
         url: string,
-        onMessage: (data: { type: string; drivers: Driver[] }) => void
+        onMessage: (data: SSEMessageData) => void
     ) => {
         // Close existing connection
         if (eventSource.value) {
@@ -20,7 +30,7 @@ export function useSSE() {
             eventSource.value = new EventSource(url);
 
             eventSource.value.onopen = () => {
-                console.log('SSE Connected');
+                //   console.log('SSE Connected');
                 isConnected.value = true;
                 error.value = null;
             };
