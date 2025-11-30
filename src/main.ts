@@ -1,4 +1,5 @@
 import './assets/css/main.css'
+import OpenLayersMap from 'vue3-openlayers'
 import { createApp } from 'vue'
 
 import App from './App.vue'
@@ -16,6 +17,8 @@ async function setupApp() {
 
     await setupRouter(app)
     await setupI18n(app)
+
+    app.use(OpenLayersMap)
 
     app.mount('#app')
 }
