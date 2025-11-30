@@ -18,9 +18,11 @@ export interface Driver {
     vehicleType: string
     status: DriverStatus
     duty_status: string
+    location?: [number, number] // [longitude, latitude] for map tracking
     createdAt?: string
     updatedAt?: string
 }
+
 
 export enum DriverStatus {
     Active = true,

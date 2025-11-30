@@ -11,6 +11,17 @@ const center = ref<[number, number]>([85.324, 27.7172]); // Default center (Kath
 const projection = ref("EPSG:4326"); // Use Lat/Lon projection
 const message = useMessage();
 
+const handleDriverSelect = (driver: Driver) => {
+  if (driver.location && driver.location.length === 2) {
+    center.value = [driver.location[0], driver.location[1]];
+    zoom.value = 16;
+    message.success(`Tracking ${driver.fullname}`);
+  } else {
+    message.warning("Driver has no location data");
+  }
+};
+
+
 // Store drivers grouped by status
 const onlineDrivers = ref<Driver[]>([]);
 const trackingDrivers = ref<Driver[]>([]);
@@ -65,6 +76,8 @@ const getUserLocation = () => {
 };
 
 // SSE Live Tracking
+let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+
 const connectLiveTracking = () => {
   const url = mapsApi.getStreamUrl(search.value);
   
@@ -79,6 +92,20 @@ const connectLiveTracking = () => {
       loading.value = false;
     }
   });
+
+  // Clear existing timer
+  if (reconnectTimer) {
+    clearTimeout(reconnectTimer);
+  }
+
+  // Reconnect before token expires
+  // Assuming token expires in 1 hour, reconnect after 55 minutes
+  const RECONNECT_BEFORE_EXPIRY = 55 * 60 * 1000; // 55 minutes in milliseconds
+  
+  reconnectTimer = setTimeout(() => {
+    console.log('Reconnecting SSE with fresh token...');
+    connectLiveTracking(); // Reconnect with new token
+  }, RECONNECT_BEFORE_EXPIRY);
 };
 
 // Fallback: REST API polling
@@ -124,6 +151,13 @@ onMounted(() => {
   startTracking();
 });
 
+// Cleanup timer on unmount
+onUnmounted(() => {
+  if (reconnectTimer) {
+    clearTimeout(reconnectTimer);
+  }
+});
+
 // No need to reconnect when tab changes with grouped data!
 // Data is already loaded for all tabs
 
@@ -145,7 +179,7 @@ watch(error, (err) => {
 <template>
   <div class="h-full flex gap-4 relative">
     <!-- Connection Status Indicator -->
-    <div class="absolute top-4 right-4 z-10">
+    <div class="absolute top-4 right-12 z-50">
       <NTag :type="isConnected ? 'success' : 'error'" size="small" round>
         <template #icon>
           <span>{{ isConnected ? '🟢' : '🔴' }}</span>
@@ -161,6 +195,7 @@ watch(error, (err) => {
         :loading="loading"
         :active-tab="activeTab"
         @update:active-tab="activeTab = $event"
+        @select-driver="handleDriverSelect"
       />
     </div>
 

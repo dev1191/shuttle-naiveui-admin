@@ -21,6 +21,7 @@ interface Props {
 
 interface Emits {
   (e: "update:activeTab", value: string): void;
+  (e: "select-driver", driver: Driver): void;
 }
 
 const props = defineProps<Props>();
@@ -59,6 +60,10 @@ const getDriverColor = (status: string) => {
 
 const handleTabChange = (value: string) => {
   emit("update:activeTab", value);
+};
+
+const handleDriverClick = (driver: Driver) => {
+  emit("select-driver", driver);
 };
 </script>
 
@@ -108,7 +113,11 @@ const handleTabChange = (value: string) => {
         <!-- Driver List -->
         <div v-else class="max-h-[500px] overflow-y-auto">
           <NList hoverable clickable>
-            <NListItem v-for="driver in filteredDrivers" :key="driver.id">
+            <NListItem 
+              v-for="driver in filteredDrivers" 
+              :key="driver._id"
+              @click="handleDriverClick(driver)"
+            >
               <template #prefix>
                 <NAvatar
                   round
@@ -156,7 +165,11 @@ const handleTabChange = (value: string) => {
         <!-- Driver List -->
         <div v-else class="max-h-[500px] overflow-y-auto">
           <NList hoverable clickable>
-            <NListItem v-for="driver in filteredDrivers" :key="driver.id">
+            <NListItem 
+              v-for="driver in filteredDrivers" 
+              :key="driver._id"
+              @click="handleDriverClick(driver)"
+            >
               <template #prefix>
                 <NAvatar
                   round
@@ -204,7 +217,11 @@ const handleTabChange = (value: string) => {
         <!-- Driver List -->
         <div v-else class="max-h-[500px] overflow-y-auto">
           <NList hoverable clickable>
-            <NListItem v-for="driver in filteredDrivers" :key="driver.id">
+            <NListItem 
+              v-for="driver in filteredDrivers" 
+              :key="driver._id"
+              @click="handleDriverClick(driver)"
+            >
               <template #prefix>
                 <NAvatar
                   round
