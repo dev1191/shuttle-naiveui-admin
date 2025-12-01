@@ -2,9 +2,9 @@
 
 export interface BusType {
     ids: string;
-    name: string;
-    short_name: string;
-    phone_code: string;
+    name: string;              // e.g., "Mini Bus", "Standard Coach", "Luxury Bus"
+    capacity_range?: string;   // e.g., "15-25 seats"
+    description?: string;      // e.g., "Compact shuttle for city routes"
     status: boolean;
 }
 
@@ -28,14 +28,14 @@ export interface BusTypeStatus {
 
 export interface CreateBusTypeDTO {
     name: string;
-    short_name: string;
-    phone_code: string;
+    capacity_range?: string;
+    description?: string;
     status: boolean;
 }
 
 export interface UpdateBusTypeDTO {
     name?: string;
-    short_name?: string;
-    phone_code?: string;
-    status: boolean;
+    capacity_range?: string;
+    description?: string;
+    status?: boolean;
 }

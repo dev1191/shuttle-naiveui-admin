@@ -87,16 +87,28 @@ const routes: RouteRecordRaw[] = [
                         meta: { title: 'Create Bus', roles: ['admin', 'manager'] }
                     },
                     {
-                        path: 'bustypelist',
-                        name: 'busTypesList',
+                        path: 'edit/:id',
+                        name: 'editBus',
+                        component: () => import('@/pages/ManageBuses/Bus/Edit.vue'),
+                        meta: { title: 'Edit Bus', roles: ['admin', 'manager'], hideInMenu: true }
+                    },
+                    {
+                        path: 'bustypes',
+                        name: 'busTypes',
                         component: () => import('@/pages/ManageBuses/BusType/Index.vue'),
                         meta: { title: 'Bus Types List', roles: ['admin', 'manager'] }
                     },
                     {
-                        path: 'buslayoutlist',
-                        name: 'busLayoutsList',
+                        path: 'buslayouts',
+                        name: 'busLayouts',
                         component: () => import('@/pages/ManageBuses/BusLayout/Index.vue'),
                         meta: { title: 'Bus Layouts List', roles: ['admin', 'manager'] }
+                    },
+                    {
+                        path: 'create-bus-layout',
+                        name: 'createBusLayout',
+                        component: () => import('@/pages/ManageBuses/BusLayout/Create.vue'),
+                        meta: { title: 'Create Bus Layout', roles: ['admin', 'manager'] }
                     },
                 ]
             },
