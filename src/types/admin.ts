@@ -1,60 +1,81 @@
+import type { Permission } from "./role";
+
 export interface Admin {
     ids: string
-    picture: string
-    fullname: string
+    fullname?: string;
     firstname: string
     lastname: string
     email: string
-    country_code: string
     phone: string
-    wallet_balance: number | string
-    address: string
-    city: string
-    state: string
-    zipCode: string
-    gender: string
-    licenseExpiry: number | null
-    licenseClass: string
-    vehicleType: string
-    status: AdminStatus
+    role: string
+    country_code: string;
+    password?: string;
+    confirmPassword?: string;
+    permissions?: Permission[]
+    picture?: string
+    address_1?: string | null
+    address_2?: string | null
+    city?: string | null
+    contact_no?: string | null
+    pincode?: string | null
+    company?: string
+    commission?: number
+    document_gst_certificate?: string
+    document_pan_card?: string
+    is_active: boolean
     createdAt?: string
     updatedAt?: string
 }
 
 export enum AdminStatus {
-    Active = 'Active',
-    Inactive = 'Inactive',
+    Active = true,
+    Inactive = false,
 }
 
 export interface CreateAdminDTO {
-    firstName: string
-    lastName: string
+    fullname?: string;
+    firstname: string
+    lastname: string
     email: string
     phone: string
-    dateOfBirth: number | null
-    address: string
-    city: string
-    state: string
-    zipCode: string
-    licenseNumber: string
-    licenseExpiry: number | null
-    licenseClass: string
-    vehicleType: string
+    role: string
+    country_code: string;
+    password?: string;
+    confirmPassword?: string;
+    permissions?: Permission[]
+    picture?: string
+    address_1?: string | null
+    address_2?: string | null
+    city?: string | null
+    contact_no?: string | null
+    pincode?: string | null
+    company?: string
+    commission?: number
+    document_gst_certificate?: string
+    document_pan_card?: string
+    is_active?: string | boolean
 }
 
 export interface UpdateAdminDTO {
-    firstName?: string
-    lastName?: string
-    email?: string
-    phone?: string
-    dateOfBirth?: number | null
-    address?: string
-    city?: string
-    state?: string
-    zipCode?: string
-    licenseNumber?: string
-    licenseExpiry?: number | null
-    licenseClass?: string
-    vehicleType?: string
-    status?: 'active' | 'inactive' | 'suspended'
+    fullname?: string;
+    firstname: string
+    lastname: string
+    email: string
+    phone: string
+    role: string
+    country_code: string;
+    password?: string;
+    confirmPassword?: string;
+    permissions?: Permission[]
+    picture?: string
+    address_1?: string | null
+    address_2?: string | null
+    city?: string | null
+    contact_no?: string | null
+    pincode?: string | null
+    company?: string
+    commission?: number
+    document_gst_certificate?: string
+    document_pan_card?: string
+    is_active?: string | boolean
 }

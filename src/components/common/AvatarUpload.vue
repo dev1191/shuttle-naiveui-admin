@@ -15,7 +15,7 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  size: 120,
+  size: 60,
   shape: 'circle',
   label: 'Upload',
   maxSizeMB: 2,

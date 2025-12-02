@@ -1,6 +1,5 @@
-
 import { createApiService } from './base.service'
-import type { Country, CreateCountryDTO, UpdateCountryDTO } from '@/types/settings/country'
+import type { Country, CreateCountryDTO, UpdateCountryDTO, CountryList } from '@/types/settings/country'
 
 /**
  * Driver-specific query params
@@ -30,5 +29,10 @@ export const countriesApi = {
     patch: countriesApiService.patch.bind(countriesApiService),
     delete: countriesApiService.delete.bind(countriesApiService),
 
-
+    /**
+     * Get country list for dropdown
+     */
+    async countryLists(search: string) {
+        return countriesApiService.customGet<CountryList>(`load`, { search })
+    },
 }

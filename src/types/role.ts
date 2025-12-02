@@ -1,4 +1,14 @@
 
+export interface Permission {
+    _id?: string;
+    name?: string;
+    slug?: string;
+    description?: string;
+    label?: string;
+    value?: string;
+}
+
+
 
 export interface Role {
     ids: string;

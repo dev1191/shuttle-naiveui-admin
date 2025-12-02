@@ -50,6 +50,7 @@ common:
   price: Price
   search: Search
   status: Status
+  submit: Submit
   week: Week
 login:
   createAccount: Create One!

@@ -166,13 +166,19 @@ const chartOption = computed<EChartsOption>(() => {
 <template>
   <NCard title="Revenue Analytics" :bordered="false" class="h-full rounded-2xl">
     <template #header-extra>
-      <NSelect v-model:value="timeRange" :options="options" size="small" class="w-32" :disabled="loading" />
+      <NSelect v-model:value="timeRange" :options="options"  class="w-50" :disabled="loading" />
     </template>
     
-    <div v-if="loading" class="h-80">
-      <NSkeleton height="320px" />
+    <div v-if="loading" class="h-80 flex items-end justify-around gap-4 p-8">
+      <NSkeleton height="60%" width="10%" />
+      <NSkeleton height="80%" width="10%" />
+      <NSkeleton height="70%" width="10%" />
+      <NSkeleton height="95%" width="10%" />
+      <NSkeleton height="45%" width="10%" />
+      <NSkeleton height="85%" width="10%" />
+      <NSkeleton height="65%" width="10%" />
     </div>
-    <VChart v-else :option="chartOption" autoresize class="h-10g0" />
+    <VChart v-else :option="chartOption" autoresize class="h-80" />
   </NCard>
 </template>
 

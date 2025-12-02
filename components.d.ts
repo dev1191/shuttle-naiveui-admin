@@ -65,6 +65,7 @@ declare module 'vue' {
     NSwitch: typeof import('naive-ui')['NSwitch']
     NUpload: typeof import('naive-ui')['NUpload']
     PageBreadcrumb: typeof import('./src/components/common/PageBreadcrumb.vue')['default']
+    PhoneInput: typeof import('./src/components/common/PhoneInput.vue')['default']
     ReferralForm: typeof import('./src/components/settings/ReferralForm.vue')['default']
     RefundForm: typeof import('./src/components/settings/RefundForm.vue')['default']
     ReplyHelpAndSupport: typeof import('./src/components/helpAndSupport/ReplyHelpAndSupport.vue')['default']

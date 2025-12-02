@@ -26,6 +26,16 @@ export interface CountryStatus {
     status: boolean
 }
 
+export interface CountryOption {
+    text: string;
+    value: string;
+}
+
+export interface CountryList {
+    totalCount: number;
+    items: CountryOption[]
+}
+
 export interface CreateCountryDTO {
     name: string;
     short_name: string;

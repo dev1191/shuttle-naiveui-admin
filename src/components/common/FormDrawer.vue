@@ -2,9 +2,11 @@
 import { NDrawer, NDrawerContent, NForm, NFormItem, NInput, NInputNumber, NButton, NSpace, NSwitch, NSelect, NRadio, NRadioGroup, NRadioButton, NDatePicker } from 'naive-ui'
 import AvatarUpload from '@/components/common/AvatarUpload.vue'
 import RichTextEditor from '@/components/common/RichTextEditor.vue'
+import PhoneInput from '@/components/common/PhoneInput.vue'
 import { useThemeStore } from '@/stores/theme'
 import { computed, ref, watch } from 'vue'
 import type { FormInst, FormRules } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 
 interface SelectOption {
   label: string
@@ -14,7 +16,7 @@ interface SelectOption {
 interface FormField {
   key: string
   label: string
-  type?: 'text' | 'textarea' | 'number' | 'switch' | 'select' | 'radio' | 'radio-group' | 'datepicker' | 'upload' | 'editor'
+  type?: 'text' | 'textarea' | 'number' | 'switch' | 'select' | 'radio' | 'radio-group' | 'datepicker' | 'upload' | 'editor' | 'phone'
   placeholder?: string
   required?: boolean
   disabled?: boolean
@@ -23,6 +25,7 @@ interface FormField {
   dateType?: 'date' | 'datetime' | 'daterange' | 'datetimerange' | 'month' | 'year' | 'quarter' // For datepicker
   valueFormat?: string // For datepicker value format
   uploadLabel?: string // For upload component label
+  countryCodeKey?: string // For phone input country code key
 }
 
 interface Props {
@@ -34,6 +37,7 @@ interface Props {
   width?: number
 }
 
+const { t } = useI18n()
 const props = withDefaults(defineProps<Props>(), {
   modelValue: null,
   loading: false,
@@ -71,6 +75,11 @@ watch(() => props.modelValue, (newValue) => {
           resetData[field.key as keyof T] = false as any
         } else if (field.type === 'select' || field.type === 'radio' || field.type === 'radio-group' || field.type === 'datepicker' || field.type === 'upload') {
           resetData[field.key as keyof T] = null as any
+        } else if (field.type === 'phone') {
+          resetData[field.key as keyof T] = '' as any
+          if (field.countryCodeKey) {
+            resetData[field.countryCodeKey as keyof T] = '' as any
+          }
         } else {
           resetData[field.key as keyof T] = '' as any
         }
@@ -220,6 +229,15 @@ watch(show, (newShow) => {
               clearable
             />
 
+            <!-- Phone Input Field -->
+            <PhoneInput
+              v-else-if="field.type === 'phone'"
+              v-model:value="formData[field.key as keyof T]"
+              v-model:countryCode="formData[(field.countryCodeKey || 'country_code') as keyof T]"
+              :placeholder="field.placeholder || `Enter ${field.label.toLowerCase()}`"
+              :disabled="field.disabled"
+            />
+
             <!-- Default Text Input -->
             <NInput
               v-else
@@ -234,11 +252,11 @@ watch(show, (newShow) => {
 
       <template #footer>
         <NSpace justify="end">
-          <NButton @click="handleCancel">
-            Cancel
+          <NButton @click="handleCancel" size="large" secondary strong type="error">
+            {{ t('common.cancel') }}
           </NButton>
-          <NButton type="primary" :loading="loading" @click="handleSubmit">
-            Submit
+          <NButton type="primary"  size="large" :loading="loading" @click="handleSubmit">
+            {{ t('common.submit') }}
           </NButton>
         </NSpace>
       </template>

@@ -3,7 +3,7 @@ import { NBadge, NButton, NIcon, NCard, NModal, NImage, NPopconfirm, NSpace, NTa
 import { RouterLink } from 'vue-router'
 import { i18n } from '@/plugins/i18n'
 import defaultAvatar from '@/assets/images/avatar/default.png'
-import { h } from 'vue'
+import { h, ref } from 'vue'
 
 export function useRender() {
     const { t } = i18n.global

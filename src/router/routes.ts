@@ -110,6 +110,12 @@ const routes: RouteRecordRaw[] = [
                         component: () => import('@/pages/ManageBuses/BusLayout/Create.vue'),
                         meta: { title: 'Create Bus Layout', roles: ['admin', 'manager'] }
                     },
+                    {
+                        path: 'edit-bus-layout/:id',
+                        name: 'editBusLayout',
+                        component: () => import('@/pages/ManageBuses/BusLayout/Edit.vue'),
+                        meta: { title: 'Edit Bus Layout', roles: ['admin', 'manager'], hideInMenu: true }
+                    },
                 ]
             },
             {
