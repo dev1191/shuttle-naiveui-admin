@@ -41,6 +41,7 @@ function handleInput(value: string | number | null) {
     />
     <NInput
       v-else
+      size="large"
       :value="modelValue === null || modelValue === undefined ? null : String(modelValue)"
       :placeholder="placeholder"
       :type="type"

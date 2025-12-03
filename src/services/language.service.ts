@@ -1,6 +1,6 @@
 
 import { createApiService } from './base.service'
-import type { Language, CreateLanguageDTO, UpdateLanguageDTO } from '@/types/settings/language'
+import type { Language, CreateLanguageDTO, UpdateLanguageDTO, LanguageList } from '@/types/settings/language'
 
 /**
  * Driver-specific query params
@@ -30,5 +30,11 @@ export const languagesApi = {
     patch: languagesApiService.patch.bind(languagesApiService),
     delete: languagesApiService.delete.bind(languagesApiService),
 
+    /**
+     * Get language list for dropdown
+     */
+    async languageLists(search: string) {
+        return languagesApiService.customGet<LanguageList>(`load`, { search })
+    },
 
 }

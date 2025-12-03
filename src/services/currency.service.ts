@@ -31,4 +31,11 @@ export const currenciesApi = {
     delete: currenciesApiService.delete.bind(currenciesApiService),
 
 
+    /**
+     * Get currency list for dropdown
+     */
+    async currencyLists(search: string) {
+        return currenciesApiService.customGet<CurrencyList>(`load`, { search })
+    },
+
 }

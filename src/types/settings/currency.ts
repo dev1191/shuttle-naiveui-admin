@@ -1,3 +1,4 @@
+import type { Option } from "..";
 
 
 export interface Currency {
@@ -23,6 +24,11 @@ export interface CurrencyListData {
     prevPage?: string;
     nextPage?: number
 
+}
+
+export interface CurrencyList {
+    totalCount: number;
+    items: Option[]
 }
 
 export interface CurrencyStatus {

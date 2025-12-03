@@ -1,3 +1,4 @@
+import type { Option } from "..";
 
 export interface LanguageOption {
     name: string
@@ -16,6 +17,12 @@ export interface Language {
     status: boolean;
     is_deleted?: boolean;
 }
+
+export interface LanguageList {
+    totalCount: number;
+    items: Option[]
+}
+
 
 
 export interface LanguageListData {

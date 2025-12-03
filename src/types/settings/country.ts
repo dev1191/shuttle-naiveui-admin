@@ -1,3 +1,4 @@
+import type { Option } from "..";
 
 
 export interface Country {
@@ -26,14 +27,11 @@ export interface CountryStatus {
     status: boolean
 }
 
-export interface CountryOption {
-    text: string;
-    value: string;
-}
+
 
 export interface CountryList {
     totalCount: number;
-    items: CountryOption[]
+    items: Option[]
 }
 
 export interface CreateCountryDTO {
