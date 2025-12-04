@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { useMessage, NDropdown, NAvatar, NText } from 'naive-ui'
 import { useAuthStore } from '@/stores'
 import type { DropdownProps } from 'naive-ui'
+import defaultAvatar from '@/assets/images/avatar/default.png'
 
 interface UserDropdownProps extends /** @vue-ignore */ DropdownProps {
   collapsed?: boolean
@@ -21,8 +22,10 @@ const message = useMessage()
 const authStore = useAuthStore()
 
 const user = computed(() => authStore.user)
-const userName = computed(() => user.value?.name || 'User')
+const userName = computed(() => `${user.value?.firstname} ${user.value?.lastname}`|| 'User')
 const userRole = computed(() => user.value?.role || 'Guest')
+const userAvatar = computed(() => user.value?.picture || '')
+
 
 const userDropdownOptions = [
   {
@@ -66,10 +69,11 @@ const onUserDropdownSelected = (key: string) => {
         round
         size="small"
         class="shrink-0"
-        style="background-color: var(--shuttle-color, #18a058); color: white;"
-      >
-        {{ userName.charAt(0).toUpperCase() }}
-      </NAvatar>
+        :src="userAvatar"
+        fallback-src="defaultAvatar"
+
+      />
+        
       
       <div v-if="!props.collapsed" class="flex flex-col min-w-0 overflow-hidden">
         <NText depth="1" strong class="truncate text-sm leading-tight">

@@ -96,7 +96,7 @@ const onSave = async () => {
     router.push({ name: "sendMessage" });
   } catch (error) {
     console.error(error);
-    message.error("Failed to send message");
+    message.error("Failed to create message");
   } finally {
     isSubmitting.value = false;
   }

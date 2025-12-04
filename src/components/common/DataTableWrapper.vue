@@ -3,6 +3,9 @@ import { ref, reactive, watch, computed } from "vue";
 import { NSelect, NSpace, NDataTable, NDatePicker, NButton } from "naive-ui";
 import type { DataTableSortState } from "naive-ui";
 import { useMessage } from "naive-ui";
+import ExportButton from "@/components/common/ExportButton.vue";
+import SearchInput from "@/components/common/SearchInput.vue";
+import SkeletonTable from "@/components/common/SkeletonTable.vue";
 
 /**
  * DataTableWrapper Component
@@ -12,7 +15,7 @@ import { useMessage } from "naive-ui";
  * - Search
  * - Filters (select, date, date-range)
  * - Column Sorting (opt-in per column)
- * - Export to CSV
+ * - Export to Excel (XLSX)
  * - Refresh
  * 
  * COLUMN SORTING:
@@ -235,57 +238,6 @@ function handleRefresh() {
   loadData();
 }
 
-/* ===========================================
-   EXPORT HANDLER
-=========================================== */
-function handleExport() {
-  if (!items.value.length) {
-    message.warning("No data to export");
-    return;
-  }
-
-  try {
-    // Get column keys (excluding actions)
-    const exportColumns = props.columns.filter(col => col.key !== 'actions');
-    
-    // Create CSV header
-    const headers = exportColumns.map(col => col.title).join(',');
-    
-    // Create CSV rows
-    const rows = items.value.map(item => {
-      return exportColumns.map(col => {
-        const value = item[col.key];
-        // Escape commas and quotes
-        if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
-          return `"${value.replace(/"/g, '""')}"`;
-        }
-        return value ?? '';
-      }).join(',');
-    });
-    
-    // Combine header and rows
-    const csv = [headers, ...rows].join('\n');
-    
-    // Create blob and download
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    
-    link.setAttribute('href', url);
-    link.setAttribute('download', props.exportFileName || `export_${Date.now()}.csv`);
-    link.style.visibility = 'hidden';
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    message.success("Data exported successfully");
-  } catch (error) {
-    console.error("Export error:", error);
-    message.error("Failed to export data");
-  }
-}
-
 /** Watch for column changes */
 watch(
   () => props.columns,
@@ -357,12 +309,14 @@ defineExpose({
             Refresh
           </NButton>
 
-          <NButton size="small" @click="handleExport">
-            <template #icon>
-              <span class="iconify ph--download size-5"></span>
-            </template>
+          <ExportButton
+            :data="items"
+            :columns="columns"
+            :file-name="exportFileName"
+            :loading="loading"
+          >
             Export
-          </NButton>
+          </ExportButton>
         </n-space>
       </n-space>
 

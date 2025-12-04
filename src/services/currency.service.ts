@@ -1,6 +1,6 @@
 
 import { createApiService } from './base.service'
-import type { Currency, CreateCurrencyDTO, UpdateCurrencyDTO } from '@/types/settings/currency'
+import type { Currency, CreateCurrencyDTO, UpdateCurrencyDTO,CurrencyList } from '@/types/settings/currency'
 
 /**
  * Driver-specific query params

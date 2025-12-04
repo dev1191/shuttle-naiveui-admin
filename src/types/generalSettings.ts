@@ -1,28 +1,22 @@
 export interface GeneralSettings {
     name: string;
-    logo: string;
+    tagline: string;
+    dark_logo: string;
+    white_logo: string;
+    favicon: string;
     email: string;
     address: string;
     phone: string;
     timezone: string;
     default_country: string;
     default_currency: string;
-
-    date_format: {
-        text: string;
-        value: string;
-    };
-
-    time_format: {
-        text: string;
-        value: string;
-    };
-
+    default_language: string;
+    date_format: string;
+    time_format: string;
     google_key: string;
     fee: string;
     tax: string;
     api_base_url: string;
-
     background_location_update_interval: number;
     driver_online_location_update_interval: number;
     max_distance: number;

@@ -30,7 +30,7 @@ const loading = ref(false)
 
 const countryOptions = computed(() => {
   return countries.value.map(country => ({
-    label: country.text,
+    label: country.label,
     value: country.value
   }))
 })

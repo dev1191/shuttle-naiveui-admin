@@ -28,6 +28,10 @@ export const useAuthStore = defineStore('auth', () => {
         roles.value = response.roles
         languages.value = response.languages
     }
+    async function setGeneralSetting(newGeneralSettings: GeneralSettings) {
+
+        generalSettings.value = newGeneralSettings
+    }
 
 
     function clearAuth() {
@@ -76,6 +80,7 @@ export const useAuthStore = defineStore('auth', () => {
         userRole,
         setAuth,
         setPermissions,
+        setGeneralSetting,
         clearAuth,
         login,
         logout,
