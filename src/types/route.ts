@@ -6,6 +6,7 @@ export interface Route {
     title: string
     stops: [CreateRouteDTO]
     status: boolean
+    createdAt?: string
 }
 
 export interface RouteListData {

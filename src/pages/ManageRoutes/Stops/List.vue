@@ -59,8 +59,8 @@ const columns = [
     render(row: Stop) {
       return h(NSpace, {}, {
         default: () => [
-          renderActionButton(EditIcon, () => router.push(`/manage-routes/stops/edit-stop/${row.ids}`),'Edit'),
-          renderDeleteActionButton('Are you sure you want to delete this stop?', () => handleDelete(row.ids),'Delete','error')
+          renderActionButton(EditIcon, () => router.push(`/manage-routes/stops/edit-stop/${row.ids}`),'Edit',null,'primary'),
+          renderDeleteActionButton('Are you sure you want to delete this stop?', () => handleDelete(row.ids),'Delete',null,'error')
         ]
       })
     }

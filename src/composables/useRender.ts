@@ -4,6 +4,11 @@ import { RouterLink } from 'vue-router'
 import { i18n } from '@/plugins/i18n'
 import defaultAvatar from '@/assets/images/avatar/default.png'
 import { h, ref } from 'vue'
+import dayjs from "dayjs";
+//import timezone from "dayjs/plugin/timezone";
+import { useAuthStore } from "@/stores/auth";
+
+
 
 export function useRender() {
     const { t } = i18n.global
@@ -113,17 +118,29 @@ export function useRender() {
         return h(NText, {}, { default: () => text })
     }
 
+
     function renderDate(date: string) {
-        return h(NText, {}, { default: () => new Date(date).toLocaleDateString() })
+        const { generalSettings } = useAuthStore();
+        const dateFormat = generalSettings?.date_format || "DD MMM YYYY";
+        const timeFormat = generalSettings?.time_format || "hh:mm A";
+        const defaultTimezone = generalSettings?.timezone || "Asia/Kolkata";
+        //  dayjs.extend(timezone);
+        return h(
+            NText,
+            {},
+            {
+                default: () =>
+                    dayjs(date, defaultTimezone).format(`${dateFormat} ${timeFormat}`),
+            }
+        );
     }
 
     function renderActionButton(
         icon: any,
         onClickAction: (param?: any) => void,
         popoverText: string,
-        iconColor?: string,
         param?: any,
-
+        iconColor?: string
     ) {
         return h(
             NPopover,
@@ -134,8 +151,9 @@ export function useRender() {
                         size: 'medium',
                         quaternary: true,
                         circle: true,
+                        type: iconColor && !iconColor.startsWith('#') ? iconColor as any : 'default',
                         renderIcon: () =>
-                            h(NIcon, { color: iconColor }, { default: () => h(icon) }),
+                            h(NIcon, { color: iconColor && iconColor.startsWith('#') ? iconColor : undefined }, { default: () => h(icon) }),
                         onClick: () => onClickAction(param)
                     }),
                 default: () => popoverText
@@ -143,24 +161,39 @@ export function useRender() {
         )
     }
 
-    function renderDeleteActionButton(confirmMessage: string, confirmAction: any, iconColor?: string) {
+    function renderDeleteActionButton(
+        confirmMessage: string,
+        confirmAction: any,
+        popoverText: string = 'Delete',
+        param: any = null,
+        type: 'error' | 'warning' | 'default' | 'primary' = 'error'
+    ) {
         return h(
             NPopconfirm,
             {
-                onPositiveClick: confirmAction,
+                onPositiveClick: () => confirmAction(param),
                 positiveText: t('common.confirm'),
                 negativeText: t('common.cancel'),
                 negativeButtonProps: { ghost: true, type: 'tertiary' }
             },
             {
                 trigger: () =>
-                    h(NButton, {
-                        size: 'medium',
-                        quaternary: true,
-                        circle: true,
-                        renderIcon: () => h(NIcon, { color: iconColor || '#d03050' }, { default: () => h(DeleteIcon) }),
-                        onClick: () => null
-                    }),
+                    h(
+                        NPopover,
+                        { trigger: 'hover' },
+                        {
+                            trigger: () =>
+                                h(NButton, {
+                                    size: 'medium',
+                                    quaternary: true,
+                                    circle: true,
+                                    type: type,
+                                    renderIcon: () => h(NIcon, null, { default: () => h(DeleteIcon) }),
+                                    onClick: () => null
+                                }),
+                            default: () => popoverText
+                        }
+                    ),
                 default: () => confirmMessage
             }
         )

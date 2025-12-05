@@ -128,13 +128,21 @@ const routes: RouteRecordRaw[] = [
                         path: "buslayouts",
                         name: "busLayouts",
                         component: () => import("@/pages/ManageBuses/BusLayout/Index.vue"),
-                        meta: { title: "Bus Layouts List", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Bus Layouts List",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                     {
                         path: "create-bus-layout",
                         name: "createBusLayout",
                         component: () => import("@/pages/ManageBuses/BusLayout/Create.vue"),
-                        meta: { title: "Create Bus Layout", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Create Bus Layout",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                     {
                         path: "edit-bus-layout/:id",
@@ -160,20 +168,32 @@ const routes: RouteRecordRaw[] = [
                     {
                         path: "stops",
                         name: "Stops",
-                        meta: { title: "Stops", roles: ["admin", "manager"], icon: "GitCommitVertical" },
+                        meta: {
+                            title: "Stops",
+                            roles: ["admin", "manager"],
+                            icon: "GitCommitVertical",
+                        },
                         children: [
                             {
                                 path: "stop-list",
                                 name: "stopList",
                                 component: () => import("@/pages/ManageRoutes/Stops/List.vue"),
-                                meta: { title: "Stop List", roles: ["admin", "manager"], icon: 'Dot' },
+                                meta: {
+                                    title: "Stop List",
+                                    roles: ["admin", "manager"],
+                                    icon: "Dot",
+                                },
                             },
                             {
                                 path: "create-stop",
                                 name: "createStop",
                                 component: () =>
                                     import("@/pages/ManageRoutes/Stops/Create.vue"),
-                                meta: { title: "Create Stop", roles: ["admin", "manager"], icon: 'Dot' },
+                                meta: {
+                                    title: "Create Stop",
+                                    roles: ["admin", "manager"],
+                                    icon: "Dot",
+                                },
                             },
                             {
                                 path: "edit-stop/:id",
@@ -183,7 +203,7 @@ const routes: RouteRecordRaw[] = [
                                     title: "Edit Stop",
                                     roles: ["admin", "manager"],
                                     hideInMenu: true,
-                                    icon: 'Dot'
+                                    icon: "Dot",
                                 },
                             },
                         ],
@@ -191,19 +211,32 @@ const routes: RouteRecordRaw[] = [
                     {
                         path: "routes",
                         name: "Routes",
-                        meta: { title: "Routes", roles: ["admin", "manager"], icon: "Waypoints" },
+                        meta: {
+                            title: "Routes",
+                            roles: ["admin", "manager"],
+                            icon: "Waypoints",
+                        },
                         children: [
                             {
                                 path: "route-list",
                                 name: "routeList",
                                 component: () => import("@/pages/ManageRoutes/Routes/List.vue"),
-                                meta: { title: "Route List", roles: ["admin", "manager"], icon: 'Dot' },
+                                meta: {
+                                    title: "Route List",
+                                    roles: ["admin", "manager"],
+                                    icon: "Dot",
+                                },
                             },
                             {
                                 path: "create-route",
                                 name: "createRoute",
-                                component: () => import("@/pages/ManageRoutes/Routes/Create.vue"),
-                                meta: { title: "Create Route", roles: ["admin", "manager"], icon: 'Dot' },
+                                component: () =>
+                                    import("@/pages/ManageRoutes/Routes/Create.vue"),
+                                meta: {
+                                    title: "Create Route",
+                                    roles: ["admin", "manager"],
+                                    icon: "Dot",
+                                },
                             },
                             {
                                 path: "edit-route/:id",
@@ -213,7 +246,40 @@ const routes: RouteRecordRaw[] = [
                                     title: "Edit Route",
                                     roles: ["admin", "manager"],
                                     hideInMenu: true,
-                                    icon: 'Dot'
+                                    icon: "Dot",
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        path: "bus-schedules",
+                        name: "busSchedules",
+                        meta: {
+                            title: "Bus Schedules",
+                            roles: ["admin", "manager"],
+                            icon: "ClipboardClock",
+                        },
+                        children: [
+                            {
+                                path: "lists",
+                                name: "lists",
+                                component: () =>
+                                    import("@/pages/ManageRoutes/BusSchedules/List.vue"),
+                                meta: {
+                                    title: "Lists",
+                                    roles: ["admin", "manager"],
+                                    icon: "Dot",
+                                },
+                            },
+                            {
+                                path: "create",
+                                name: "create",
+                                component: () =>
+                                    import("@/pages/ManageRoutes/BusSchedules/Create.vue"),
+                                meta: {
+                                    title: "Create",
+                                    roles: ["admin", "manager"],
+                                    icon: "Dot",
                                 },
                             },
                         ],
@@ -233,13 +299,21 @@ const routes: RouteRecordRaw[] = [
                         path: "list",
                         name: "driversList",
                         component: () => import("@/pages/Drivers/List.vue"),
-                        meta: { title: "Drivers List", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Drivers List",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                     {
                         path: "create",
                         name: "createDriver",
                         component: () => import("@/pages/Drivers/Create.vue"),
-                        meta: { title: "Create Driver", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Create Driver",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                 ],
             },
@@ -256,14 +330,22 @@ const routes: RouteRecordRaw[] = [
                         path: "list",
                         name: "customersList",
                         component: () => import("@/pages/Customers/List.vue"),
-                        meta: { title: "Customers List", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Customers List",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                     {
                         path: "walletRecharge",
                         name: "walletRecharge",
                         component: () =>
                             import("@/pages/Customers/Wallets/WalletRecharge.vue"),
-                        meta: { title: "Wallet Recharge", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Wallet Recharge",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                     {
                         path: "walletHistory/:id?",
@@ -272,7 +354,7 @@ const routes: RouteRecordRaw[] = [
                         meta: {
                             title: "Wallet History",
                             roles: ["admin", "manager"],
-                            icon: 'Dot',
+                            icon: "Dot",
                             hideInMenu: true,
                         },
                     },
@@ -284,20 +366,28 @@ const routes: RouteRecordRaw[] = [
                             title: "Booking History",
                             roles: ["admin", "manager"],
                             hideInMenu: true,
-                            icon: 'Dot'
+                            icon: "Dot",
                         },
                     },
                     {
                         path: "referral",
                         name: "referral",
                         component: () => import("@/pages/Customers/Referral.vue"),
-                        meta: { title: "Referrals", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Referrals",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                     {
                         path: "suggestion",
                         name: "suggestion",
                         component: () => import("@/pages/Customers/Suggestion.vue"),
-                        meta: { title: "Suggestions", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Suggestions",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                 ],
             },
@@ -309,14 +399,19 @@ const routes: RouteRecordRaw[] = [
                     title: "Manage Offers",
                     icon: "TicketPercent",
                     roles: ["admin"],
-                    icon: 'Dot'
+                    icon: "Dot",
                 },
             },
             {
                 path: "/passes",
                 name: "passes",
                 component: () => import("@/pages/Passes/Index.vue"),
-                meta: { title: "Manage Passes", icon: "Ticket", roles: ["admin"], icon: 'Dot' },
+                meta: {
+                    title: "Manage Passes",
+                    icon: "Ticket",
+                    roles: ["admin"],
+                    icon: "Dot",
+                },
             },
             {
                 path: "/help-and-support",
@@ -326,14 +421,19 @@ const routes: RouteRecordRaw[] = [
                     title: "Manage Help And Support",
                     icon: "HandHelping",
                     roles: ["admin"],
-                    icon: 'Dot'
+                    icon: "Dot",
                 },
             },
             {
                 path: "/send-message",
                 name: "sendMessage",
                 component: () => import("@/pages/SendMessage/Index.vue"),
-                meta: { title: "Send Message", icon: "Bell", roles: ["admin"], icon: 'Dot' },
+                meta: {
+                    title: "Send Message",
+                    icon: "Bell",
+                    roles: ["admin"],
+                    icon: "Dot",
+                },
             },
             {
                 path: "/send-message/create",
@@ -344,7 +444,17 @@ const routes: RouteRecordRaw[] = [
                     icon: "Bell",
                     roles: ["admin"],
                     hideInMenu: true,
-                    icon: 'Dot'
+                    icon: "Dot",
+                },
+            },
+            {
+                path: "/bookings",
+                name: "bookings",
+                component: () => import("@/pages/Bookings/List.vue"),
+                meta: {
+                    title: "Manage Bookings",
+                    roles: ["admin", "manager"],
+                    icon: "BookText",
                 },
             },
             {
@@ -355,14 +465,17 @@ const routes: RouteRecordRaw[] = [
                     title: "Settings",
                     icon: "Settings",
                     roles: ["admin", "manager"],
-
                 },
                 children: [
                     {
                         path: "site-settings",
                         name: "siteSettings",
                         component: () => import("@/pages/Settings/SiteSettings/Index.vue"),
-                        meta: { title: "Site Settings", roles: ["admin", "manager"], icon: 'Dot' },
+                        meta: {
+                            title: "Site Settings",
+                            roles: ["admin", "manager"],
+                            icon: "Dot",
+                        },
                     },
                     {
                         path: "countries",
@@ -372,7 +485,7 @@ const routes: RouteRecordRaw[] = [
                             title: "Countries",
                             roles: ["admin", "manager"],
                             hideInMenu: true,
-                            icon: 'Dot'
+                            icon: "Dot",
                         },
                     },
                     {

@@ -207,6 +207,7 @@ onMounted(() => {
                   :on-create="onCreateStop"
                   :min="2"
                   show-sort-button
+                  size="large"
                 >
                   <template #default="{ index, value }">
                     <n-card embedded class="mb-2 w-full">

@@ -54,13 +54,18 @@ const columns = [
     },
   },
   {
+    title:'Created At',
+    key:'createdAt',
+    render:(row:Route) => renderDate(row.createdAt)
+  },
+  {
     title: 'Actions',
     key: 'actions',
     render(row: Route) {
       return h(NSpace, {}, {
         default: () => [
-          renderActionButton(EditIcon, () => router.push(`/manage-routes/routes/edit-route/${row.ids}`), 'Edit'),
-           renderActionButton(CopyIcon, () => replicateRoute(row.ids), 'Replicate'),
+          renderActionButton(EditIcon, () => router.push(`/manage-routes/routes/edit-route/${row.ids}`), 'Edit',null,'primary'),
+           renderActionButton(CopyIcon, () => replicateRoute(row.ids), 'Replicate',null,'info'),
           renderDeleteActionButton('Are you sure you want to delete this route?', () => handleDelete(row.ids),'Delete',null,'error')
         ]
       })
