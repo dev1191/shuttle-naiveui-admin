@@ -21,7 +21,7 @@ const getDriverColor = (status: string) => {
   switch (status) {
     case "ONLINE":
       return "#10b981"; // Green
-    case "TRACKING":
+    case "TRACK":
       return "#3b82f6"; // Blue
     case "OFFLINE":
       return "#6b7280"; // Gray

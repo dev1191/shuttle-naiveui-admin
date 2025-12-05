@@ -38,7 +38,7 @@ const onlineCount = computed(() =>
 );
 
 const trackingCount = computed(() => 
-  props.drivers.filter((d) => d.duty_status === "TRACKING").length
+  props.drivers.filter((d) => d.duty_status === "TRACK").length
 );
 
 const offlineCount = computed(() => 
@@ -49,7 +49,7 @@ const getDriverColor = (status: string) => {
   switch (status) {
     case "ONLINE":
       return "green";
-    case "TRACKING":
+    case "TRACK":
       return "blue";
     case "OFFLINE":
       return "gray";
@@ -142,7 +142,7 @@ const handleDriverClick = (driver: Driver) => {
         </div>
       </NTabPane>
 
-      <NTabPane name="TRACKING" tab="Tracking Drivers">
+      <NTabPane name="TRACK" tab="Tracking Drivers">
         <!-- Skeleton Loading -->
         <div v-if="loading" class="space-y-3">
           <div v-for="i in 5" :key="i" class="flex items-center gap-3 p-3">
@@ -182,7 +182,7 @@ const handleDriverClick = (driver: Driver) => {
                 <NText strong>{{ driver.fullname }}</NText>
                 <div class="mt-1">
                   <NTag
-                    :type="driver.duty_status === 'TRACKING' ? 'info' : 'default'"
+                    :type="driver.duty_status === 'TRACK' ? 'info' : 'default'"
                     size="small"
                   >
                     {{ driver.duty_status }}

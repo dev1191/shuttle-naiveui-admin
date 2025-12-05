@@ -49,7 +49,7 @@ const filteredDrivers = computed<Driver[]>(() => {
   switch (activeTab.value) {
     case "ONLINE":
       return onlineDrivers.value;
-    case "TRACKING":
+    case "TRACK":
       return trackingDrivers.value;
     case "OFFLINE":
       return offlineDrivers.value;
@@ -86,7 +86,7 @@ const connectLiveTracking = () => {
       // Update grouped drivers from backend
       if (data.groups) {
         onlineDrivers.value = data.groups.ONLINE || [];
-        trackingDrivers.value = data.groups.TRACKING || [];
+        trackingDrivers.value = data.groups.TRACK || [];
         offlineDrivers.value = data.groups.OFFLINE || [];
       }
       loading.value = false;
@@ -120,7 +120,7 @@ const fetchDrivers = async () => {
         case "ONLINE":
           onlineDrivers.value = response.data;
           break;
-        case "TRACKING":
+        case "TRACK":
           trackingDrivers.value = response.data;
           break;
         case "OFFLINE":
