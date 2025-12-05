@@ -1,14 +1,14 @@
 import httpClient from '@/common/api/http-client'
-import axios, { type AxiosResponse } from 'axios'
+import { type AxiosResponse } from 'axios'
 
 /**
  * Response from file upload
  */
 export interface UploadResponse {
     url: string
-    filename: string
-    size: number
-    mimetype: string
+    filename?: string
+    size?: number
+    mimetype?: string
 }
 
 /**
@@ -37,7 +37,7 @@ export const uploaderApi = {
             formData.append('folder', folder)
         }
 
-        const response: AxiosResponse<UploadResponse> = await httpClient.post(
+        const response = await httpClient.post(
             '/uploader',
             formData,
             {
@@ -46,7 +46,11 @@ export const uploaderApi = {
                 }
             }
         )
-        return response.data
+        // Map API response data (string, url) to UploadResponse
+        const responseData = response.data as any
+        return {
+            url: responseData.data
+        }
     },
 
     /**
@@ -91,6 +95,7 @@ export const uploaderApi = {
             maxWidth?: number
             maxHeight?: number
             quality?: number
+            onProgress?: (progress: number) => void
         }
     ): Promise<UploadResponse> {
         const formData = new FormData()
@@ -109,16 +114,26 @@ export const uploaderApi = {
             formData.append('quality', options.quality.toString())
         }
 
-        const response: AxiosResponse<UploadResponse> = await httpClient.post(
+        const response = await httpClient.post(
             '/uploader',
             formData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: (progressEvent) => {
+                    if (options?.onProgress && progressEvent.total) {
+                        const progress = (progressEvent.loaded / progressEvent.total) * 100
+                        options.onProgress(progress)
+                    }
                 }
             }
         )
-        return response.data
+        // Map API response data (string, url) to UploadResponse
+        const responseData = response.data as any
+        return {
+            url: responseData.data
+        }
     },
 
     /**
@@ -126,7 +141,7 @@ export const uploaderApi = {
      * @param url - File URL to delete
      */
     async deleteFile(url: string): Promise<void> {
-        await httpClient.delete('/uploader/file', {
+        await httpClient.delete('/uploader', {
             data: { url }
         })
     },

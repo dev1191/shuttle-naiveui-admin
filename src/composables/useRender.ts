@@ -1,5 +1,5 @@
 import { Trash2 as DeleteIcon, AlertTriangle as FailedIcon, Star as StarIcon, CheckCircle as SuccessIcon, MoreHorizontal } from 'lucide-vue-next'
-import { NBadge, NButton, NIcon, NCard, NModal, NImage, NPopconfirm, NSpace, NTag, NText, NDropdown } from 'naive-ui'
+import { NBadge, NButton, NPopover, NIcon, NCard, NModal, NImage, NPopconfirm, NSpace, NTag, NText, NDropdown } from 'naive-ui'
 import { RouterLink } from 'vue-router'
 import { i18n } from '@/plugins/i18n'
 import defaultAvatar from '@/assets/images/avatar/default.png'
@@ -117,14 +117,30 @@ export function useRender() {
         return h(NText, {}, { default: () => new Date(date).toLocaleDateString() })
     }
 
-    function renderActionButton(icon: any, onClickAction: any, iconColor?: string) {
-        return h(NButton, {
-            size: 'medium',
-            quaternary: true,
-            circle: true,
-            renderIcon: () => h(NIcon, { color: iconColor }, { default: () => h(icon) }),
-            onClick: onClickAction
-        })
+    function renderActionButton(
+        icon: any,
+        onClickAction: (param?: any) => void,
+        popoverText: string,
+        iconColor?: string,
+        param?: any,
+
+    ) {
+        return h(
+            NPopover,
+            { trigger: 'hover' },
+            {
+                trigger: () =>
+                    h(NButton, {
+                        size: 'medium',
+                        quaternary: true,
+                        circle: true,
+                        renderIcon: () =>
+                            h(NIcon, { color: iconColor }, { default: () => h(icon) }),
+                        onClick: () => onClickAction(param)
+                    }),
+                default: () => popoverText
+            }
+        )
     }
 
     function renderDeleteActionButton(confirmMessage: string, confirmAction: any, iconColor?: string) {

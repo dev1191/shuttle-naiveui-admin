@@ -42,9 +42,9 @@ const columns = [
         value: row.status,
         onUpdateValue: async (value: boolean) => {
           try {
-            await stopsApi.update(row.ids, { status: value });
+            await stopsApi.toggleStatus(row.ids, value );
             row.status = value;
-            message.success(`${row.name} status updated successfully`);
+            message.success(`Stop : ${row.title} status updated successfully`);
           } catch (error) {
             message.error("Failed to update status");
             console.error("Status update error:", error);
@@ -59,8 +59,8 @@ const columns = [
     render(row: Stop) {
       return h(NSpace, {}, {
         default: () => [
-          renderActionButton(EditIcon, () => router.push(`/manage-routes/stops/edit-stop/${row.ids}`)),
-          renderDeleteActionButton('Are you sure you want to delete this stop?', () => handleDelete(row.ids))
+          renderActionButton(EditIcon, () => router.push(`/manage-routes/stops/edit-stop/${row.ids}`),'Edit'),
+          renderDeleteActionButton('Are you sure you want to delete this stop?', () => handleDelete(row.ids),'Delete','error')
         ]
       })
     }

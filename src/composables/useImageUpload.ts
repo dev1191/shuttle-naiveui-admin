@@ -47,21 +47,47 @@ export function useImageUpload(options?: {
 
             for (const file of files) {
                 try {
+                    // Find the file in the list and set initial uploading state
+                    const fileIndex = fileList.value.findIndex(f => f.file === file)
+                    if (fileIndex !== -1) {
+                        const currentFile = fileList.value[fileIndex]
+                        fileList.value[fileIndex] = {
+                            ...currentFile,
+                            id: currentFile.id,
+                            status: 'uploading',
+                            percentage: 0
+                        }
+                    }
+
                     const response = await uploaderApi.uploadImage(file, {
                         folder: options?.folder,
                         maxWidth: options?.maxWidth,
                         maxHeight: options?.maxHeight,
-                        quality: options?.quality
+                        quality: options?.quality,
+                        onProgress: (progress: number) => {
+                            // Update percentage during upload
+                            const idx = fileList.value.findIndex(f => f.file === file)
+                            if (idx !== -1) {
+                                const f = fileList.value[idx]
+                                fileList.value[idx] = {
+                                    ...f,
+                                    id: f.id,
+                                    percentage: Math.round(progress)
+                                }
+                            }
+                        }
                     })
                     uploadedUrls.push(response.url)
 
                     // Update file list with uploaded URL
-                    const fileIndex = fileList.value.findIndex(f => f.file === file)
                     if (fileIndex !== -1) {
+                        const f = fileList.value[fileIndex]
                         fileList.value[fileIndex] = {
-                            ...fileList.value[fileIndex],
+                            ...f,
+                            id: f.id,
                             status: 'finished',
-                            url: response.url
+                            url: response.url,
+                            percentage: 100
                         }
                     }
                 } catch (error) {
@@ -71,9 +97,12 @@ export function useImageUpload(options?: {
                     // Mark file as error
                     const fileIndex = fileList.value.findIndex(f => f.file === file)
                     if (fileIndex !== -1) {
+                        const f = fileList.value[fileIndex]
                         fileList.value[fileIndex] = {
-                            ...fileList.value[fileIndex],
-                            status: 'error'
+                            ...f,
+                            id: f.id,
+                            status: 'error',
+                            percentage: 0
                         }
                     }
                 }

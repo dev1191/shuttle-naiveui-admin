@@ -199,6 +199,23 @@ const routes: RouteRecordRaw[] = [
                                 component: () => import("@/pages/ManageRoutes/Routes/List.vue"),
                                 meta: { title: "Route List", roles: ["admin", "manager"], icon: 'Dot' },
                             },
+                            {
+                                path: "create-route",
+                                name: "createRoute",
+                                component: () => import("@/pages/ManageRoutes/Routes/Create.vue"),
+                                meta: { title: "Create Route", roles: ["admin", "manager"], icon: 'Dot' },
+                            },
+                            {
+                                path: "edit-route/:id",
+                                name: "editRoute",
+                                component: () => import("@/pages/ManageRoutes/Routes/Edit.vue"),
+                                meta: {
+                                    title: "Edit Route",
+                                    roles: ["admin", "manager"],
+                                    hideInMenu: true,
+                                    icon: 'Dot'
+                                },
+                            },
                         ],
                     },
                 ],

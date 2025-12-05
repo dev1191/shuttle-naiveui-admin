@@ -1,15 +1,15 @@
 import type { Option } from ".";
 
 
-export interface Stop {
+export interface Route {
     ids: string;
     title: string
-    stops: [CreateStopDTO]
+    stops: [CreateRouteDTO]
     status: boolean
 }
 
-export interface StopListData {
-    items: Stop[];
+export interface RouteListData {
+    items: Route[];
     totalRecords: number;
     limit: number;
     page: number;
@@ -22,24 +22,37 @@ export interface StopListData {
 
 }
 
-export interface StopStatus {
+export interface RouteStatus {
     status: boolean
 }
 
 
 
-export interface StopList {
+export interface RouteList {
     totalCount: number;
     items: Option[]
 }
 
+
 export interface CreateStopDTO {
+    stopId: string
+    id: string
+    order: number
+    stop_name: string
+    address: string
+    coordinates: [number, number]
+    minimum_fare_pickup: number
+    minimum_fare_drop: number
+    price_per_km_drop: number;
+    price_per_km_pickup: number
+}
+export interface CreateRouteDTO {
     title: string
     stops: [CreateStopDTO]
     status: boolean
 }
 
-export interface UpdateStopDTO {
+export interface UpdateRouteDTO {
     title: string
     stops: [CreateStopDTO]
     status: boolean

@@ -4,6 +4,7 @@ import {
   useMessage,
   type FormInst,
   type FormRules,
+  type UploadFileInfo,
 } from "naive-ui";
 import { stopsApi } from "@/services/stop.service";
 import type { CreateStopDTO } from "@/types/stop";
@@ -26,8 +27,9 @@ const {
   fileList,
   handleUploadChange,
   loadExistingFiles,
-  getFilesForSubmit,
-  uploading
+  getUploadedUrls,
+  uploading,
+  deleteFile
 } = useImageUpload({
   folder: 'stops',
   maxWidth: 1920,
@@ -35,6 +37,13 @@ const {
   quality: 85,
   autoUpload: true  // Enable auto-upload when files are selected
 });
+
+const handleRemove = async (data: { file: UploadFileInfo, fileList: UploadFileInfo[] }) => {
+  console.log("handleRemove",data);
+  if (data.file.url) {
+    await deleteFile(data.file.url);
+  }
+}
 
 const formData = reactive<CreateStopDTO>({
   title: "",
@@ -102,7 +111,8 @@ const onSubmit = async () => {
     const submitData: any = { ...formData };
 
     // Get files for submission using composable
-    const files = getFilesForSubmit(!!props.id);
+    const files = getUploadedUrls();
+    console.log("files",files)
     if (files.length > 0) {
       submitData.files = files;
     } else {
@@ -135,7 +145,7 @@ onMounted(() => {
   <n-card :title="id ? 'Edit Stop' : 'Create Stop'">
     <template #header-extra>
       <n-space>
-        <n-button @click="router.back()">Cancel</n-button>
+        <n-button type="error" secondary @click="router.back()">Cancel</n-button>
         <n-button type="primary" :loading="loading" @click="onSubmit">
           {{ id ? "Update" : "Create" }}
         </n-button>
@@ -209,6 +219,7 @@ onMounted(() => {
                   v-model:file-list="fileList"
                   list-type="image-card"
                   @change="handleUploadChange"
+                  @remove="handleRemove"
                   accept="image/*"
                   :max="8"
                 >
