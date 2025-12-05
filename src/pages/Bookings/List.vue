@@ -54,17 +54,17 @@ const columns = [
   },
   {
     title: 'Status',
-    key: 'status',
+    key: 'travel_status',
     render: (row: Booking) => {
       let type: 'default' | 'success' | 'warning' | 'error' | 'info' = 'default'
-      switch (row.status) {
-        case 'Scheduled': type = 'info'; break;
-        case 'OnBoarded': type = 'warning'; break;
-        case 'Completed': type = 'success'; break;
-        case 'Cancelled': type = 'error'; break;
-        case 'Expired': type = 'default'; break;
+      switch (row.travel_status.toLowerCase()) {
+        case 'scheduled': type = 'info'; break;
+        case 'onboarded': type = 'warning'; break;
+        case 'completed': type = 'success'; break;
+        case 'cancelled': type = 'error'; break;
+        case 'expired': type = 'default'; break;
       }
-      return h(NTag, { type, bordered: false, round: true }, { default: () => row.status })
+      return h(NTag, { type, bordered: false, round: true }, { default: () => row.travel_status })
     }
   }
 ]
@@ -87,6 +87,14 @@ const handleTabChange = (value: string) => {
   currentStatus.value = value
   refreshKey.value++
 }
+
+const extraFilters = [
+  {
+    key: 'createdAt',
+    label: 'Created Date',
+    type: 'date-range'
+  }
+];
 </script>
 
 <template>
@@ -110,6 +118,7 @@ const handleTabChange = (value: string) => {
           :key="refreshKey"
           :fetchData="fetchData"
           :columns="columns"
+            :extraFilters="extraFilters"
         />
       </div>
     </NCard>
