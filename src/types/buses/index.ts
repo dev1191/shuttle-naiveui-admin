@@ -1,3 +1,4 @@
+import type { Option } from "..";
 
 
 export interface Bus {
@@ -47,6 +48,11 @@ export interface BusListData {
 
 export interface BusStatus {
     status: boolean;
+}
+
+export interface BusList {
+    totalCount: number;
+    items: Option[]
 }
 
 export interface CreateBusDTO {

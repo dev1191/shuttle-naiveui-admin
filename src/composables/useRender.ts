@@ -120,6 +120,8 @@ export function useRender() {
 
 
     function renderDate(date: string, showTime = true) {
+
+
         const { generalSettings } = useAuthStore();
         const dateFormat = generalSettings?.date_format || "DD MMM YYYY";
         const timeFormat = generalSettings?.time_format || "hh:mm A";
@@ -157,6 +159,45 @@ export function useRender() {
                         onClick: () => onClickAction(param)
                     }),
                 default: () => popoverText
+            }
+        )
+    }
+
+    function renderConfirmActionButton(
+        icon: any,
+        confirmMessage: string,
+        confirmAction: any,
+        popoverText: string,
+        param: any = null,
+        type: 'error' | 'warning' | 'default' | 'primary' | 'info' = 'default'
+    ) {
+        return h(
+            NPopconfirm,
+            {
+                onPositiveClick: () => confirmAction(param),
+                positiveText: t('common.confirm'),
+                negativeText: t('common.cancel'),
+                negativeButtonProps: { ghost: true, type: 'tertiary' }
+            },
+            {
+                trigger: () =>
+                    h(
+                        NPopover,
+                        { trigger: 'hover' },
+                        {
+                            trigger: () =>
+                                h(NButton, {
+                                    size: 'medium',
+                                    quaternary: true,
+                                    circle: true,
+                                    type: type,
+                                    renderIcon: () => h(NIcon, null, { default: () => h(icon) }),
+                                    onClick: () => null
+                                }),
+                            default: () => popoverText
+                        }
+                    ),
+                default: () => confirmMessage
             }
         )
     }
@@ -304,6 +345,7 @@ export function useRender() {
         renderActionLabel,
         renderDeleteActionButton,
         renderDropdownMenu,
-        renderConfirmAlertButton
+        renderConfirmAlertButton,
+        renderConfirmActionButton
     }
 }

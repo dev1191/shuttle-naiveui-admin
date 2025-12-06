@@ -48,6 +48,11 @@ export interface CreateStopDTO {
     files: [string]
 }
 
+
+export interface StopList {
+    items: Option[]
+}
+
 export interface UpdateStopDTO {
     title: string
     landmark: string

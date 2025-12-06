@@ -36,6 +36,7 @@ const handleDelete = async (bus: Bus) => {
 
 const columns: DataTableColumns<Bus> = [
   { title: "Name", key: "name" },
+    { title: "Code", key: "code" },
   { title: "Max Seats", key: "max_seats" },
   {
     title: "Status",

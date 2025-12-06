@@ -13,6 +13,6 @@ const route = useRoute()
 
 <style scoped>
 .page-container {
-  padding: 24px;
+  padding: 10px;
 }
 </style>

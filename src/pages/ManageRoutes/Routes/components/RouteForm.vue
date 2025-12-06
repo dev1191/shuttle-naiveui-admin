@@ -22,7 +22,7 @@ const message = useMessage();
 const formRef = ref<FormInst | null>(null);
 const loading = ref(false);
 const stopOptions = ref<SelectOption[]>([]);
-const stopMap = new Map<string, Stop>();
+const searchLoading = ref(false);
 
 const formData = reactive({
   title: "",
@@ -43,37 +43,43 @@ const rules: FormRules = {
   ],
 };
 
-const fetchStops = async () => {
+const fetchStops = async (query = "") => {
+  searchLoading.value = true;
   try {
-    const response = await stopsApi.getAll({ pageSize: 1000 });
-    stopOptions.value = response.items.map((stop) => {
-      stopMap.set(stop.ids, stop);
-      return {
-        label: stop.title,
-        value: stop.ids,
-        disabled: !stop.status,
-      };
-    });
+    const result = await stopsApi.stopLists(query);
+    stopOptions.value = result.items;
   } catch (error) {
     console.error("Failed to fetch stops", error);
     message.error("Failed to load stops");
+  } finally {
+    searchLoading.value = false;
   }
 };
 
-const handleStopChange = (index: number, stopId: string) => {
-  const stop = stopMap.get(stopId);
-  if (stop) {
-    formData.stops[index] = {
-      ...formData.stops[index],
-      stopId: stopId,
-      stop_name: stop.title,
-      coordinates: [stop.lat, stop.lng],
-      // Maintain existing values if any, else default
-      minimum_fare_pickup: formData.stops[index].minimum_fare_pickup || 0,
-      minimum_fare_drop: formData.stops[index].minimum_fare_drop || 0,
-      price_per_km_drop: formData.stops[index].price_per_km_drop || 0,
-      price_per_km_pickup: formData.stops[index].price_per_km_pickup || 0,
-    };
+const handleStopSearch = (query: string) => {
+  fetchStops(query);
+};
+
+const handleStopChange = async (index: number, stopId: string) => {
+  if (!stopId) return;
+  try {
+    const stop: any = await stopsApi.getById(stopId);
+    if (stop) {
+      formData.stops[index] = {
+        ...formData.stops[index],
+        stopId: stopId,
+        stop_name: stop.title,
+        coordinates: [stop.lat, stop.lng],
+        // Maintain existing values if any, else default
+        minimum_fare_pickup: formData.stops[index].minimum_fare_pickup || 0,
+        minimum_fare_drop: formData.stops[index].minimum_fare_drop || 0,
+        price_per_km_drop: formData.stops[index].price_per_km_drop || 0,
+        price_per_km_pickup: formData.stops[index].price_per_km_pickup || 0,
+      };
+    }
+  } catch (error) {
+    console.error("Failed to fetch stop details", error);
+    message.error("Failed to get stop details");
   }
 };
 
@@ -92,7 +98,18 @@ const fetchData = async () => {
       if (Array.isArray(data.stops)) {
         formData.stops = data.stops.map((s: any) => ({
           ...s,
-          // Ensure structure matches DTO just in case
+          minimum_fare_pickup: Number(
+            s.minimum_fare_pickup ?? s.minimumFarePickup ?? 0
+          ),
+          minimum_fare_drop: Number(
+            s.minimum_fare_drop ?? s.minimumFareDrop ?? 0
+          ),
+          price_per_km_pickup: Number(
+            s.price_per_km_pickup ?? s.pricePerKmPickup ?? 0
+          ),
+          price_per_km_drop: Number(
+            s.price_per_km_drop ?? s.pricePerKmDrop ?? 0
+          ),
         }));
       }
     }
@@ -226,12 +243,21 @@ onMounted(() => {
                             <n-select
                               v-model:value="value.stopId"
                               :options="stopOptions"
-                              placeholder="Select Stop"
+                              placeholder="Search and select stop"
                               filterable
+                              remote
                               clearable
                               size="large"
+                              :loading="searchLoading"
+                              @search="handleStopSearch"
                               @update:value="
                                 (val) => handleStopChange(index, val)
+                              "
+                              :fallback-option="
+                                () => ({
+                                  label: value.stop_name,
+                                  value: value.stopId,
+                                })
                               "
                             />
                           </n-form-item>
@@ -255,6 +281,7 @@ onMounted(() => {
                             label="Min Fare Drop"
                             :path="`stops[${index}].minimum_fare_drop`"
                           >
+              
                             <n-input-number
                               size="large"
                               v-model:value="value.minimum_fare_drop"

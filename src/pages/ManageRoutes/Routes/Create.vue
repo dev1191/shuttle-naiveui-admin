@@ -12,6 +12,6 @@ import RouteForm from './components/RouteForm.vue'
 
 <style scoped>
 .page-container {
-  padding: 24px;
+  padding: 10px;
 }
 </style>

@@ -282,6 +282,18 @@ const routes: RouteRecordRaw[] = [
                                     icon: "Dot",
                                 },
                             },
+                            {
+                                path: "edit/:id",
+                                name: "edit",
+                                component: () =>
+                                    import("@/pages/ManageRoutes/BusSchedules/Edit.vue"),
+                                meta: {
+                                    title: "Edit",
+                                    roles: ["admin", "manager"],
+                                    icon: "Dot",
+                                    hideInMenu: true,
+                                },
+                            },
                         ],
                     },
                 ],

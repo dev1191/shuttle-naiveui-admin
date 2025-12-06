@@ -1,5 +1,5 @@
 import { createApiService } from './base.service'
-import type { Stop, CreateStopDTO, UpdateStopDTO } from '@/types/stop'
+import type { Stop, CreateStopDTO, UpdateStopDTO, StopList } from '@/types/stop'
 
 
 /**
@@ -38,5 +38,12 @@ export const stopsApi = {
      */
     async toggleStatus(stopId: string | number, status: boolean) {
         return stopsApiService.patch(`${stopId}/status`, { status })
+    },
+
+    /**
+       * Get stop list for dropdown
+       */
+    async stopLists(search: string) {
+        return stopsApiService.customGet<StopList>(`load`, { search })
     },
 }
