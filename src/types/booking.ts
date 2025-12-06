@@ -1,14 +1,24 @@
 
 export interface Booking {
     id: string;
-    booking_id: string;
+    pnr_no: string;
     customer_name: string;
+    customer_email: string;
+    customer_avatar: string;
     route_name: string;
-    status: 'Scheduled' | 'OnBoarded' | 'Completed' | 'Canceled' | 'Expired';
-    travel_date: string;
-    seat_identifier: string;
-    price: number;
-    payment_status: string;
+    travel_status: 'SCHEDULED' | 'ONBOARDED' | 'COMPLETED' | 'CANCELED' | 'EXPIRED';
+    drop_date: string;
+    drop_time: string;
+    seat_nos: string;
+    sub_total: string;
+    tax: string;
+    final_total_fare: number;
+    payment_status: 'Pending' |
+    'Completed' |
+    'Processing' |
+    'Failed' |
+    'Refunded' |
+    'Cancelled';
     boarding_point: string;
     dropping_point: string;
     createdAt: string;

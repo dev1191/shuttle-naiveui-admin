@@ -5,8 +5,8 @@ export interface Offer {
     name: string;
     code: string;
     discount: number;
-    start_date: Date
-    end_date: Date
+    start_date: string
+    end_date: string
     terms: string
     picture: string
     attempt: number
@@ -37,8 +37,8 @@ export interface CreateOfferDTO {
     name: string;
     code: string;
     discount: number;
-    start_date: Date
-    end_date: Date
+    start_date: string
+    end_date: string
     terms: string
     picture: string
     attempt: number

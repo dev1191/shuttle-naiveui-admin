@@ -11,22 +11,24 @@ import {
   UserCheck, 
   CheckCircle, 
   XCircle, 
-  Clock 
+  Clock ,
+  Eye as EyeIcon
 } from 'lucide-vue-next'
+import { useAuthStore } from '@/stores'
 
 const router = useRouter()
 const message = useMessage()
-const { renderDate } = useRender()
-
+const { renderDate,renderUserAvatar,renderActionButton } = useRender()
+const { generalSettings } = useAuthStore()
 const currentStatus = ref('Scheduled')
 const refreshKey = ref(0)
 
 const tabs = [
-  { name: 'Scheduled', icon: Calendar },
-  { name: 'OnBoarded', icon: UserCheck },
-  { name: 'Completed', icon: CheckCircle },
-  { name: 'Cancelled', icon: XCircle },
-  { name: 'Expired', icon: Clock }
+  { name: 'Scheduled', icon: Calendar, color: '#2080f0' },
+  { name: 'OnBoarded', icon: UserCheck, color: '#f0a020' },
+  { name: 'Completed', icon: CheckCircle, color: '#18a058' },
+  { name: 'Cancelled', icon: XCircle, color: '#d03050' },
+  { name: 'Expired', icon: Clock, color: '#909090' }
 ]
 
 const columns = [
@@ -36,7 +38,9 @@ const columns = [
   },
   {
     title: 'Customer',
-    key: 'customer_name'
+    key: 'customer_name',
+    render: (row) => renderUserAvatar(row.customer_avatar, `${row.customer_name}`, `${row.customer_phone}`),
+  
   },
   {
     title: 'Route',
@@ -50,24 +54,39 @@ const columns = [
   {
     title: 'Price',
     key: 'final_total_fare',
-    render: (row: Booking) => `${row.price}`
+    render: (row: Booking) => `${generalSettings.currency_symbol}${row.final_total_fare}`
   },
   {
-    title: 'Status',
-    key: 'travel_status',
+    title: 'Payment Status',
+    key: 'payment_status',
     render: (row: Booking) => {
       let type: 'default' | 'success' | 'warning' | 'error' | 'info' = 'default'
-      switch (row.travel_status.toLowerCase()) {
-        case 'scheduled': type = 'info'; break;
-        case 'onboarded': type = 'warning'; break;
-        case 'completed': type = 'success'; break;
-        case 'cancelled': type = 'error'; break;
-        case 'expired': type = 'default'; break;
+      switch (row.payment_status) {
+        case 'Pending': type = 'info'; break;
+        case 'Processing': type = 'warning'; break;
+        case 'Completed': type = 'success'; break;
+        case 'Cancelled': type = 'error'; break;
+        case 'Failed': type = 'default'; break;
       }
-      return h(NTag, { type, bordered: false, round: true }, { default: () => row.travel_status })
+      return h(NTag, { type, bordered: false, round: true }, { default: () => row.payment_status })
     }
-  }
+  },
+  {
+    title: 'Action',
+    key: 'actions',
+    render(row: Booking) {
+      return h(NSpace, {}, {
+        default: () => [
+          renderActionButton(EyeIcon, () => viewDetail(row), 'View',null,'primary'),
+        ]
+      })
+    }
+  },
 ]
+
+const viewDetail = async () =>{
+
+}
 
 const fetchData = async (params: any) => {
   const response = await bookingsApi.getAll({ 
@@ -104,10 +123,10 @@ const extraFilters = [
         <NTabPane v-for="tab in tabs" :key="tab.name" :name="tab.name">
           <template #tab>
             <div class="flex items-center gap-2">
-              <NIcon>
+              <NIcon :color="tab.color">
                 <component :is="tab.icon" />
               </NIcon>
-              {{ tab.name }}
+              <NText :color="tab.color">{{ tab.name }}</NText>     
             </div>
           </template>
         </NTabPane>

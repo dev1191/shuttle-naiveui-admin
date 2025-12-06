@@ -11,6 +11,7 @@ export interface GeneralSettings {
     default_country: string;
     default_currency: string;
     default_language: string;
+    currency_symbol?: string;
     date_format: string;
     time_format: string;
     google_key: string;

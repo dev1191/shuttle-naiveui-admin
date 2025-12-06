@@ -12,20 +12,22 @@ const showDrawer = ref(false);
 const loading = ref(false);
 const selectedOffer = ref<Offer | null>(null);
 const tableRef = ref();
-const { renderActionButton, renderDeleteActionButton } = useRender();
+const { renderActionButton, renderDeleteActionButton, renderDate } =
+  useRender();
 
 const formFields = [
   { key: "name", label: "Offer Name", required: true },
   {
     key: "start_date",
     label: "Start Date",
-    type:"datepicker",
+    type: "datepicker",
     dateType: "date",
     required: true,
   },
   {
     key: "end_date",
     label: "End Date",
+    type: "datepicker",
     dateType: "date",
     required: true,
   },
@@ -42,8 +44,20 @@ const formFields = [
 const columns: DataTableColumns<Offer> = [
   { title: "Name", key: "name" },
   { title: "Code", key: "code" },
-  { title: "Start Date", key: "start_date" },
-  { title: "End Date", key: "end_date" },
+  {
+    title: "Start Date",
+    key: "start_date",
+    render: (row: Offer) => {
+      return renderDate(row.start_date, false);
+    },
+  },
+  {
+    title: "End Date",
+    key: "end_date",
+    render: (row: Offer) => {
+      return renderDate(row.end_date, false);
+    },
+  },
   { title: "Type", key: "type" },
   { title: "Route Name", key: "route_name" },
   {

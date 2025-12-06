@@ -399,7 +399,7 @@ const routes: RouteRecordRaw[] = [
                     title: "Manage Offers",
                     icon: "TicketPercent",
                     roles: ["admin"],
-                    icon: "Dot",
+
                 },
             },
             {
@@ -410,7 +410,7 @@ const routes: RouteRecordRaw[] = [
                     title: "Manage Passes",
                     icon: "Ticket",
                     roles: ["admin"],
-                    icon: "Dot",
+
                 },
             },
             {
@@ -421,7 +421,7 @@ const routes: RouteRecordRaw[] = [
                     title: "Manage Help And Support",
                     icon: "HandHelping",
                     roles: ["admin"],
-                    icon: "Dot",
+
                 },
             },
             {
@@ -432,7 +432,7 @@ const routes: RouteRecordRaw[] = [
                     title: "Send Message",
                     icon: "Bell",
                     roles: ["admin"],
-                    icon: "Dot",
+
                 },
             },
             {
@@ -444,7 +444,7 @@ const routes: RouteRecordRaw[] = [
                     icon: "Bell",
                     roles: ["admin"],
                     hideInMenu: true,
-                    icon: "Dot",
+
                 },
             },
             {

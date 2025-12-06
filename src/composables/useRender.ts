@@ -119,7 +119,7 @@ export function useRender() {
     }
 
 
-    function renderDate(date: string) {
+    function renderDate(date: string, showTime = true) {
         const { generalSettings } = useAuthStore();
         const dateFormat = generalSettings?.date_format || "DD MMM YYYY";
         const timeFormat = generalSettings?.time_format || "hh:mm A";
@@ -130,7 +130,7 @@ export function useRender() {
             {},
             {
                 default: () =>
-                    dayjs(date, defaultTimezone).format(`${dateFormat} ${timeFormat}`),
+                    dayjs(date, defaultTimezone).format(`${dateFormat}${showTime ? ` ${timeFormat}` : ''}`),
             }
         );
     }
