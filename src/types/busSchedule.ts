@@ -10,6 +10,8 @@ export interface BusSchedule {
     status: boolean
     start_date: string
     end_date: string
+    depart_time?: string
+    arrive_time?: string
 }
 
 export interface BusScheduleListData {

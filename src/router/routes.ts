@@ -486,7 +486,17 @@ const routes: RouteRecordRaw[] = [
                         meta: {
                             title: "Site Settings",
                             roles: ["admin", "manager"],
-                            icon: "Dot",
+                            icon: "MonitorCog",
+                        },
+                    },
+                    {
+                        path: "payment-gateways",
+                        name: "paymentGateways",
+                        component: () => import("@/pages/Settings/PaymentGateways/Index.vue"),
+                        meta: {
+                            title: "Payment Gateways",
+                            roles: ["admin", "manager"],
+                            icon: "Landmark",
                         },
                     },
                     {

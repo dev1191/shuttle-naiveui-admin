@@ -5,6 +5,13 @@ import { i18n } from '@/plugins/i18n'
 import defaultAvatar from '@/assets/images/avatar/default.png'
 import { h, ref } from 'vue'
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 //import timezone from "dayjs/plugin/timezone";
 import { useAuthStore } from "@/stores/auth";
 
@@ -118,21 +125,32 @@ export function useRender() {
         return h(NText, {}, { default: () => text })
     }
 
+    function renderTime(time: string) {
+        const { generalSettings } = useAuthStore();
+        const timeFormat = generalSettings?.time_format ?? "hh:mm A";
+
+        return h(NText, {}, {
+            default: () =>
+                dayjs(time, "HH:mm").format(timeFormat)
+        })
+    }
+
 
     function renderDate(date: string, showTime = true) {
-
-
         const { generalSettings } = useAuthStore();
+
         const dateFormat = generalSettings?.date_format || "DD MMM YYYY";
         const timeFormat = generalSettings?.time_format || "hh:mm A";
         const defaultTimezone = generalSettings?.timezone || "Asia/Kolkata";
-        //  dayjs.extend(timezone);
+
+        // IMPORTANT: parse format for your input "30-12-2026"
+        const parsed = dayjs.tz(date, "DD-MM-YYYY", defaultTimezone);
+
         return h(
             NText,
             {},
             {
-                default: () =>
-                    dayjs(date, defaultTimezone).format(`${dateFormat}${showTime ? ` ${timeFormat}` : ''}`),
+                default: () => parsed.format(`${dateFormat}${showTime ? ` ${timeFormat}` : ''}`)
             }
         );
     }
@@ -340,6 +358,7 @@ export function useRender() {
         renderLabel,
         renderText,
         renderDate,
+        renderTime,
         renderActionButton,
         renderConfirmStatus,
         renderActionLabel,

@@ -16,6 +16,8 @@ import type { BusSchedule } from "@/types/busSchedule";
 import DataTableWrapper from "@/components/common/DataTableWrapper.vue";
 import { useRender } from "@/composables/useRender";
 import { useBusSchedule } from "@/composables/useBusSchedule";
+
+
 import {
   Plus as PlusIcon,
   Edit as EditIcon,
@@ -24,7 +26,7 @@ import {
 
 const router = useRouter();
 const message = useMessage();
-const { renderDate, renderDeleteActionButton, renderActionButton } =
+const { renderDate, renderDeleteActionButton, renderActionButton,renderTime } =
   useRender();
 const { updateBusScheduleStatus } = useBusSchedule();
 
@@ -51,6 +53,17 @@ const columns = [
     key: "bus_name",
   },
   {
+    title: "Depart - Arrive",
+    key: "depart_time",
+    render:(row: BusSchedule) => {
+      return h('div', [
+        renderTime(row.depart_time),
+        " - ",
+        renderTime(row.arrive_time)
+      ])
+    }
+  },
+  {
     title: "Operates From - To (dates)",
     key: "start_date",
     render: (row: BusSchedule) => {
@@ -67,14 +80,10 @@ const columns = [
     render: (row: BusSchedule) => {
       return h(NSwitch, {
         value: row.status,
-        onUpdateValue: (value: boolean) => updateBusScheduleStatus(row, value),
+        onUpdateValue: (value: boolean) =>
+          updateBusScheduleStatus(row.ids, value, () => refreshKey.value++),
       });
     },
-  },
-  {
-    title: "Created At",
-    key: "createdAt",
-    render: (row: BusSchedule) => renderDate(row.createdAt,true),
   },
   {
     title: "Actions",

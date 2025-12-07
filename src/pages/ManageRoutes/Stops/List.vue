@@ -85,7 +85,7 @@ const fetchStops = async (params: any) => {
       <div class="px-3 py-3">
         <NSpace justify="space-between" class="mb-3">
           <h2 class="text-xl font-bold">Stops</h2>
-          <NButton type="primary" @click="router.push('/manage-routes/create-stop')">
+          <NButton type="primary" @click="router.push({name:'createStop'})">
             <template #icon>
               <NIcon>
                 <PlusIcon />

@@ -294,6 +294,21 @@ export function useBusSchedule(propsId?: string) {
         }
     };
 
+    const updateBusScheduleStatus = async (id: string, status: boolean, onSuccess?: () => void) => {
+        try {
+            await busSchedulesApi.toggleStatus(id, status);
+            message.success("Bus Schedule status updated successfully");
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                fetchData();
+            }
+        } catch (error: any) {
+            console.error("Update status error:", error);
+            message.error(error.message || "Operation failed");
+        }
+    };
+
     onMounted(() => {
         fetchOptions();
         fetchData();
@@ -313,6 +328,7 @@ export function useBusSchedule(propsId?: string) {
         handleBusSearch,
         handleRouteSearch,
         handleRouteChange,
-        onSubmit
+        onSubmit,
+        updateBusScheduleStatus
     };
 }
