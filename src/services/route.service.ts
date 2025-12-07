@@ -1,5 +1,5 @@
 import { createApiService } from './base.service'
-import type { Route, CreateRouteDTO, UpdateRouteDTO } from '@/types/route'
+import type { Route, CreateRouteDTO, UpdateRouteDTO, RouteList } from '@/types/route'
 
 
 /**
@@ -38,5 +38,12 @@ export const routesApi = {
      */
     async toggleStatus(routeId: string | number, status: boolean) {
         return routesApiService.patch(`${routeId}/status`, { status })
+    },
+
+    /**
+        * Get route list for dropdown
+        */
+    async routeLists(search: string) {
+        return routesApiService.customGet<RouteList>(`load`, { search })
     },
 }
