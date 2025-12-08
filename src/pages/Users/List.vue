@@ -63,7 +63,7 @@ const columns = [
     key:'createdAt',
     sorter:true,
     render(row: Admin){
-      return row.createdAt ? renderDate(row.createdAt) : 'N/A'
+      return row.createdAt ? renderDate(row.createdAt,true) : 'N/A'
     }
   },
   {

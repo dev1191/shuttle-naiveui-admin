@@ -11,7 +11,7 @@ const message = useMessage();
 const loading = ref(false);
 
 const handleBack = () => {
-  router.push("/manage-buses/bus");
+  router.push({ name: "busesList" });
 };
 
 const handleSubmit = async (data: any) => {
@@ -33,7 +33,7 @@ const handleSubmit = async (data: any) => {
 <template>
   <NLayout>
     <NLayoutContent>
-      <div class="px-4 py-4">
+      <div class="px-10 py-10">
         <NPageHeader @back="handleBack">
           <template #title> Create New Bus </template>
         </NPageHeader>

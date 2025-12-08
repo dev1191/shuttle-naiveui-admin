@@ -100,3 +100,5 @@ settings:
     title: Privacy Policy Settings
   pages:
     title: Pages Settings
+  socialLinks:
+    title: Social Link Settings

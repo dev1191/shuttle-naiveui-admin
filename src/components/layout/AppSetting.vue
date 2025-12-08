@@ -11,7 +11,8 @@ import {
   Share as ShareIcon,
   TicketSlash as RefundIcon,
   Megaphone as NotificationIcon,
-  Layers as PageIcon
+  Layers as PageIcon,
+  HandHeart as SocialIcon
 } from 'lucide-vue-next';
 
 import { useRender } from '@/composables/useRender';
@@ -72,6 +73,11 @@ const menuOptions = [
     label: () => h(RouterLink, { to: { name: 'pages' } }, { default: () => t('settings.pages.title') }),
     key: 'pages',
     icon: renderIcon(PageIcon)
+  },
+  {
+    label: () => h(RouterLink, { to: { name: 'socialLinks' } }, { default: () => t('settings.socialLinks.title') }),
+    key: 'socialLinks',
+    icon: renderIcon(SocialIcon)
   },
 ];
 

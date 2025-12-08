@@ -14,11 +14,11 @@ const tableRef = ref();
 const { renderActionButton, renderDeleteActionButton } = useRender();
 
 const handleAdd = () => {
-  router.push({ name: "createbusLayout" });
+  router.push({ name: "createBusLayout" });
 };
 
 const handleEdit = (busLayout: BusLayout) => {
-  router.push({ name: "editbusLayout", params: { id: busLayout.ids } });
+  router.push({ name: "editBusLayout", params: { id: busLayout.ids } });
 };
 
 const handleDelete = async (busLayout: BusLayout) => {
@@ -37,7 +37,6 @@ const handleDelete = async (busLayout: BusLayout) => {
 const columns: DataTableColumns<BusLayout> = [
   { title: "Name", key: "name" },
   { title: "Max Seats", key: "max_seats" },
-  { title: "Layout", key: "layout" },
   {
     title: "Status",
     key: "status",

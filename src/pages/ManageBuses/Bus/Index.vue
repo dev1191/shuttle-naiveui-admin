@@ -1,58 +1,64 @@
 <script setup lang="ts">
-import { NSwitch, useMessage } from "naive-ui";
+import { NSelect } from "naive-ui";
 import type { DataTableColumns } from "naive-ui";
-import { useRouter } from "vue-router";
-import { bussApi } from "@/services/buses/bus.service";
 import type { Bus } from "@/types/buses/index";
 import { useRender } from "@/composables/useRender";
-import { PencilIcon as EditIcon } from "lucide-vue-next";
+import { useBus } from "@/composables/useBus";
+import { PencilIcon as EditIcon, EyeIcon } from "lucide-vue-next";
+import BusDetailsDrawer from "./components/BusDetailsDrawer.vue";
 
-const message = useMessage();
-const router = useRouter();
 const { t } = useI18n();
 const tableRef = ref();
 const { renderActionButton, renderDeleteActionButton } = useRender();
+const { navigateToCreate, navigateToEdit, updateStatus, deleteBus, fetchBuses } = useBus();
+
+// Drawer state
+const showDrawer = ref(false);
+const selectedBus = ref<Bus | null>(null);
 
 const handleAdd = () => {
-  router.push({ name: "createBus" });
+  navigateToCreate();
+};
+
+const handleView = (bus: Bus) => {
+  selectedBus.value = bus;
+  showDrawer.value = true;
 };
 
 const handleEdit = (bus: Bus) => {
-  router.push({ name: "editBus", params: { id: bus.ids } });
+  navigateToEdit(bus.ids);
 };
 
 const handleDelete = async (bus: Bus) => {
-  try {
-    const response = await bussApi.delete(bus.ids);
-    message.success(response.message);
-    if (response.status) {
-      loadData();
-    }
-  } catch (error: any) {
-    message.error(error.message);
-    console.error("Delete error:", error);
-  }
+  await deleteBus(bus.ids, () => {
+    loadData();
+  });
 };
 
 const columns: DataTableColumns<Bus> = [
   { title: "Name", key: "name" },
-    { title: "Code", key: "code" },
+  { title: "Registration No", key: "reg_no" },
+  { title: "Layout", key: "layout" },
   { title: "Max Seats", key: "max_seats" },
   {
     title: "Status",
     key: "status",
     render: (row) => {
-      return h(NSwitch, {
+      return h(NSelect, {
         value: row.status,
-        onUpdateValue: async (value: boolean) => {
-          try {
-            await bussApi.update(row.ids, { status: value });
+        options: [
+            { label: 'Active', value: 'Active' },
+            { label: 'OnRoute', value: 'OnRoute' },
+            { label: 'Idle', value: 'Idle' },
+            { label: 'Maintenance', value: 'Maintance' },
+            { label: 'Breakdown', value: 'Breakdown' },
+            { label: 'Inactive', value: 'Inactive' },
+        ],
+        style: { width: '150px' },
+        onUpdateValue: async (value: any) => {
+          await updateStatus(row.ids, value, () => {
             row.status = value;
-            message.success(`${row.name} status updated successfully`);
-          } catch (error) {
-            message.error("Failed to update status");
-            console.error("Status update error:", error);
-          }
+          });
         },
       });
     },
@@ -61,25 +67,14 @@ const columns: DataTableColumns<Bus> = [
     title: "Actions",
     key: "actions",
     render: (row) => [
-      renderActionButton(EditIcon, () => handleEdit(row)),
+      renderActionButton(EyeIcon, () => handleView(row), 'View'),
+      renderActionButton(EditIcon, () => handleEdit(row), 'Edit'),
       renderDeleteActionButton(t("common.deleteConfirm"), () =>
         handleDelete(row)
       ),
     ],
   },
 ];
-
-// Fetch function for DataTableWrapper
-async function fetchBuss(params: Record<string, any>) {
-  const response = await bussApi.getAll(params);
-  return {
-    items: response.items,
-    totalRecords: response.totalRecords,
-    page: response.page,
-    limit: response.limit,
-    totalPages: response.totalPages,
-  };
-}
 
 // Reload data function
 function loadData() {
@@ -105,7 +100,7 @@ function loadData() {
 
           <DataTableWrapper
             ref="tableRef"
-            :fetchData="fetchBuss"
+            :fetchData="fetchBuses"
             :columns="columns"
             :extraFilters="[]"
             :defaultPageSize="10"
@@ -113,6 +108,9 @@ function loadData() {
             :scrollX="100"
           />
         </NSpace>
+
+        <!-- Bus Details Drawer -->
+        <BusDetailsDrawer v-model:show="showDrawer" :bus="selectedBus" />
 
 
       </div>

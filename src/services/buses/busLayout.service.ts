@@ -29,4 +29,12 @@ export const busLayoutsApi = {
     update: busLayoutsApiService.update.bind(busLayoutsApiService),
     patch: busLayoutsApiService.patch.bind(busLayoutsApiService),
     delete: busLayoutsApiService.delete.bind(busLayoutsApiService),
+
+
+        /**
+         * Get country list for dropdown
+         */
+        async busLayoutLists(search: string) {
+            return busLayoutsApiService.customGet<BusLayoutList>(`load`, { search })
+        },
 }

@@ -500,6 +500,16 @@ const routes: RouteRecordRaw[] = [
                         },
                     },
                     {
+                        path: "email-templates",
+                        name: "emailTemplates",
+                        component: () => import("@/pages/Settings/EmailTemplates/Index.vue"),
+                        meta: {
+                            title: "Email Templates",
+                            roles: ["admin", "manager"],
+                            icon: "Mail",
+                        },
+                    },
+                    {
                         path: "countries",
                         name: "countries",
                         component: () => import("@/pages/Settings/Countries/Index.vue"),
@@ -590,6 +600,16 @@ const routes: RouteRecordRaw[] = [
                             hideInMenu: true,
                         },
                     },
+                    {
+                        path: "socialLinks",
+                        name: "socialLinks",
+                        component: () => import("@/pages/Settings/Socials/Index.vue"),
+                        meta: {
+                            title: "Social Links",
+                            roles: ["admin", "manager"],
+                            hideInMenu: true,
+                        },
+                    }
                 ],
             },
         ],

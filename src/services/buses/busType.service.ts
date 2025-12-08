@@ -1,6 +1,6 @@
 
 import { createApiService } from './../base.service'
-import type { BusType, CreateBusTypeDTO, UpdateBusTypeDTO } from '@/types/buses/busType'
+import type { BusType, CreateBusTypeDTO, UpdateBusTypeDTO, BusTypeList } from '@/types/buses/busType'
 
 /**
  * BusType-specific query params
@@ -31,4 +31,10 @@ export const bustypesApi = {
     delete: bustypesApiService.delete.bind(bustypesApiService),
 
 
+    /**
+     * Get bus layout list for dropdown
+     */
+    async busTypeLists(search: string) {
+        return bustypesApiService.customGet<BusTypeList>(`load`, { search });
+    },
 }

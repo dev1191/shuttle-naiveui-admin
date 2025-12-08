@@ -16,7 +16,7 @@ const busData = ref<Bus | undefined>(undefined);
 const busId = route.params.id as string;
 
 const handleBack = () => {
-  router.push("/manage-buses/bus");
+  router.push({ name: "busesList" });
 };
 
 const fetchBus = async () => {

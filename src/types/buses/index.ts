@@ -13,7 +13,7 @@ export interface Bus {
     bustypeId: string;
     buslayoutId: string;
     amenities: string[];           // Fixed array syntax
-    status: boolean;
+    status: 'Active' | 'OnRoute' | 'Idle' | 'Maintance' | 'Breakdown' | 'Inactive';
     picture: string[];             // Fixed array syntax
     max_seats?: number;            // Added for convenience
     certificate_registration: string;
@@ -47,7 +47,7 @@ export interface BusListData {
 }
 
 export interface BusStatus {
-    status: boolean;
+    status: 'Active' | 'OnRoute' | 'Idle' | 'Maintance' | 'Breakdown' | 'Inactive';
 }
 
 export interface BusList {
@@ -66,7 +66,7 @@ export interface CreateBusDTO {
     bustypeId: string;
     buslayoutId: string;
     amenities: string[];
-    status: boolean;
+    status: 'Active' | 'OnRoute' | 'Idle' | 'Maintance' | 'Breakdown' | 'Inactive';
     picture: string[];
     max_seats?: number;
     certificate_registration: string;
@@ -87,7 +87,7 @@ export interface UpdateBusDTO {
     bustypeId?: string;
     buslayoutId?: string;
     amenities?: string[];
-    status?: boolean;
+    status?: 'Active' | 'OnRoute' | 'Idle' | 'Maintance' | 'Breakdown' | 'Inactive';
     picture?: string[];
     max_seats?: number;
     certificate_registration?: string;

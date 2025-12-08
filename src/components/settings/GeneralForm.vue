@@ -27,6 +27,7 @@ import {
   type FormInst
 } from "naive-ui";
 import { useAuthStore } from "@/stores/auth";
+import { useThemeStore } from "@/stores/theme";
 
 const { t } = useI18n();
 
@@ -66,6 +67,12 @@ const formData = reactive({
   driver_online_location_update_interval: 0,
   max_distance: 0,
   prebooking_time: 0,
+
+  // appearance
+  theme_mode: "light",
+  primary_color: "#18a058",
+  app_url: ""
+ 
 });
 
 // Transform timezones list for n-select
@@ -76,7 +83,19 @@ const timezoneOptions = computed(() => {
   }));
 });
 
-const { setGeneralSetting } = useAuthStore()
+const { setGeneralSetting } = useAuthStore();
+const themeStore = useThemeStore();
+
+// Watch theme_mode changes and update theme store
+watch(() => formData.theme_mode, (newMode) => {
+  themeStore.setThemeMode(newMode as any);
+});
+
+// Watch primary_color changes and update theme store
+watch(() => formData.primary_color, (newColor) => {
+  themeStore.setPrimaryColor(newColor);
+});
+
 const searchCountry = ref("");
 const countryOptions = ref<SelectOption[]>([]);
 
@@ -157,7 +176,11 @@ const onSave = async () => {
    const result =  await settingsApi.update("general", formData);
 
     message.success("General settings saved successfully");
-    setGeneralSetting(result.data)
+    setGeneralSetting(result.data);
+    
+    // Update theme store with saved values
+    themeStore.setThemeMode(formData.theme_mode as any);
+    themeStore.setPrimaryColor(formData.primary_color);
   } catch (error: any) {
     if (error.response?.data?.message) {
       message.error(error.response.data.message);
@@ -177,6 +200,10 @@ onMounted(() => {
   fetchCountries();
   fetchCurrencies();
   fetchLanguages();
+  
+  // Initialize form with theme store values
+  formData.theme_mode = themeStore.themeMode;
+  formData.primary_color = themeStore.primaryColor;
 });
 </script>
 
@@ -497,6 +524,48 @@ onMounted(() => {
                   style="width: 100%"
                 />
               </n-form-item>
+            </n-gi>
+          </n-grid>
+        </n-card>
+      </n-tab-pane>
+
+         <!-- APPEARANCE TAB -->
+      <n-tab-pane name="appearance" tab="Appearance Settings">
+        <n-card title="Theme Settings" class="mb-4">
+          <n-grid :cols="3" :x-gap="24">
+            <n-gi>
+              <n-form-item label="Theme Mode" path="theme_mode">
+                <n-select
+                  size="large"
+                  v-model:value="formData.theme_mode"
+                  :options="[
+                    { label: 'Light', value: 'light' },
+                    { label: 'Dark', value: 'dark' },
+                    { label: 'Auto', value: 'auto' },
+                  ]"
+                  placeholder="Select theme mode"
+                />
+              </n-form-item>
+            </n-gi>
+
+            <n-gi>
+              <n-form-item label="Primary Color" path="primary_color">
+                <n-input
+                  size="large"
+                  v-model:value="formData.primary_color"
+                  type="color"
+                  placeholder="#18a058"
+                />
+              </n-form-item>
+            </n-gi>
+
+            <n-gi>
+              <FormInput
+                v-model="formData.app_url"
+                label="App URL"
+                path="app_url"
+                placeholder="https://app.example.com"
+              />
             </n-gi>
           </n-grid>
         </n-card>

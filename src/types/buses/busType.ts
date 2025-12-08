@@ -22,6 +22,11 @@ export interface BusTypeListData {
 
 }
 
+export interface BusTypeList {
+    totalCount: number;
+    items: Option[]
+}
+
 export interface BusTypeStatus {
     status: boolean
 }

@@ -1,24 +1,26 @@
+import type { Option } from ".."
 
 
 export interface BusLayout {
-    ids: string;
-    adminId?: string;
-    name: string;              // e.g., "2x2 Standard Layout"
-    status: boolean;
-    max_seats: number;         // Changed from string
-    rows: number;
-    columns: number;
-    steering: 'left' | 'right'; // Steering position
-    seatLists: SeatList[];     // Changed from [SeatList] to SeatList[]
+    ids: string
+    name: string
+    status: boolean
+    max_seats: string
+    seat_lists: SeatList[]
+    rows: number
+    columns: number
+    steering: string
 }
 
 export interface SeatList {
-    id: number;
-    name: string;              // e.g., "A1", "B2"
-    isFemale: boolean;         // Reserved for female passengers
-    isSeat: boolean;           // true = seat, false = aisle/gap
-    row?: number;              // Row position
-    column?: number;           // Column position
+    id: number
+    name: string
+    isFemale: boolean
+    isSeat: boolean
+    isGap?: boolean          // Column position
+    deck?: number            // 1: Lower, 2: Upper
+    row?: number
+    col?: number
 }
 
 export interface BusLayoutListData {
@@ -34,28 +36,31 @@ export interface BusLayoutListData {
     nextPage?: number;
 }
 
+export interface BusLayoutList {
+    totalCount: number;
+    items: Option[]
+}
+
 export interface BusLayoutStatus {
     status: boolean;
 }
 
 export interface CreateBusLayoutDTO {
-    adminId?: string;
-    name: string;
-    status: boolean;
-    max_seats: number;
-    rows: number;
-    columns: number;
-    steering: 'left' | 'right';
-    seatLists: SeatList[];
+    name: string
+    status: boolean
+    max_seats: string
+    seat_lists: SeatList[]
+    rows: number
+    columns: number
+    steering: string
 }
 
 export interface UpdateBusLayoutDTO {
-    adminId?: string;
-    name?: string;
-    status?: boolean;
-    max_seats?: number;
-    rows?: number;
-    columns?: number;
-    steering?: 'left' | 'right';
-    seatLists?: SeatList[];
+    name: string
+    status: boolean
+    max_seats: string
+    seat_lists: SeatList[]
+    rows: number
+    columns: number
+    steering: string
 }
