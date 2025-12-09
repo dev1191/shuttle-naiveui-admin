@@ -281,7 +281,7 @@ onMounted(() => {
                             label="Min Fare Drop"
                             :path="`stops[${index}].minimum_fare_drop`"
                           >
-              
+          
                             <n-input-number
                               size="large"
                               v-model:value="value.minimum_fare_drop"

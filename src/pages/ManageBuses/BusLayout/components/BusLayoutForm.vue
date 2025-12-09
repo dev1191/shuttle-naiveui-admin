@@ -157,7 +157,7 @@ const handlePreview = () => {
     const layoutData = layoutConfigRef.value.getLayoutData();
     
     previewData.value = {
-        seat_lists: layoutData.seatLists,
+        seatLists: layoutData.seatLists,
         steering: formValue.value.steering
     };
     showPreview.value = true;

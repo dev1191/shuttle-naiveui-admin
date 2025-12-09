@@ -86,6 +86,35 @@ const routes: RouteRecordRaw[] = [
                     },
                 ],
             },
+            {
+                path: "/operators",
+                name: "operator",
+                meta: {
+                    title: "Manage Operators",
+                    icon: "SquareUserRound",
+                    roles: ["admin", "manager"],
+                },
+                children: [
+                    {
+                        path: "list",
+                        name: "operatorsList",
+                        component: () => import("@/pages/Operators/List.vue"),
+                        meta: { title: "Operators List", icon: "Dot", roles: ["admin", "manager"] }
+                    },
+                    {
+                        path: "create",
+                        name: "createOperator",
+                        component: () => import("@/pages/Operators/Create.vue"),
+                        meta: { title: "Create Operator", icon: "Dot", roles: ["admin", "manager"] }
+                    },
+                    {
+                        path: "edit/:id",
+                        name: "editOperator",
+                        component: () => import("@/pages/Operators/Edit.vue"),
+                        meta: { title: "Edit Operator", icon: "Dot", roles: ["admin", "manager"], hideInMenu: true }
+                    }
+                ]
+            },
 
             {
                 path: "/buses",
@@ -304,7 +333,7 @@ const routes: RouteRecordRaw[] = [
                 meta: {
                     title: "Manage Drivers",
                     icon: "Car",
-                    roles: ["admin", "manager"],
+                    roles: ["admin", "manager", "operator"],
                 },
                 children: [
                     {
@@ -313,7 +342,7 @@ const routes: RouteRecordRaw[] = [
                         component: () => import("@/pages/Drivers/List.vue"),
                         meta: {
                             title: "Drivers List",
-                            roles: ["admin", "manager"],
+                            roles: ["admin", "manager", "operator"],
                             icon: "Dot",
                         },
                     },
@@ -323,8 +352,19 @@ const routes: RouteRecordRaw[] = [
                         component: () => import("@/pages/Drivers/Create.vue"),
                         meta: {
                             title: "Create Driver",
-                            roles: ["admin", "manager"],
+                            roles: ["admin", "manager", "operator"],
                             icon: "Dot",
+                        },
+                    },
+                    {
+                        path: "edit/:id",
+                        name: "editDriver",
+                        component: () => import("@/pages/Drivers/Edit.vue"),
+                        meta: {
+                            title: "Edit Driver",
+                            roles: ["admin", "manager", "operator"],
+                            icon: "Dot",
+                            hideInMenu: true,
                         },
                     },
                 ],

@@ -143,8 +143,9 @@ export function useRender() {
         const timeFormat = generalSettings?.time_format || "hh:mm A";
         const defaultTimezone = generalSettings?.timezone || "Asia/Kolkata";
 
-        // IMPORTANT: parse format for your input "30-12-2026"
-        const parsed = dayjs.tz(date, "DD-MM-YYYY", defaultTimezone);
+        // Parse ISO date format from API (e.g., "2024-12-09T12:53:34.000Z")
+        // If the date is already in DD-MM-YYYY format, it will still work
+        const parsed = dayjs(date).tz(defaultTimezone);
 
         return h(
             NText,

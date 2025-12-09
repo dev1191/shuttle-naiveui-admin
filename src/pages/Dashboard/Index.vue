@@ -50,7 +50,7 @@ const stats = [
     footer: "vs yesterday",
   },
   {
-    title: "Active Users",
+    title: "Active Customers",
     value: "850",
     icon: Users,
     iconColor: "#d03050",

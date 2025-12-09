@@ -1,23 +1,20 @@
 export interface Driver {
     _id: string
-    picture: string
-    fullname: string
-    firstName: string
-    lastName: string
+    operatorId?: string
+    firstname: string
+    lastname: string
+    short_name: string
     email: string
     country_code: string
     phone: string
-    dateOfBirth: number | null
-    address: string
-    city: string
-    state: string
-    zipCode: string
-    licenseNumber: string
-    licenseExpiry: number | null
-    licenseClass: string
-    vehicleType: string
+    national_id: string
+    picture: string
+    type: string
     status: DriverStatus
     duty_status: string
+    document_licence: string
+    document_national_icard: string
+    document_police_vertification: string
     location?: [number, number] // [longitude, latitude] for map tracking
     createdAt?: string
     updatedAt?: string
@@ -25,39 +22,46 @@ export interface Driver {
 
 
 export enum DriverStatus {
-    Active = true,
-    Inactive = false,
+    Active = 'Active',
+    Inactive = 'Inactive',
+    OnRoute = 'OnRoute',
+    Breakdown = 'Breakdown',
+    Idle = 'Idle',
+    Maintenance = 'Maintenance',
 }
 
 export interface CreateDriverDTO {
-    firstName: string
-    lastName: string
+    operatorId?: string
+    firstname: string
+    lastname: string
+    short_name: string
     email: string
+    country_code: string
     phone: string
-    dateOfBirth: number | null
-    address: string
-    city: string
-    state: string
-    zipCode: string
-    licenseNumber: string
-    licenseExpiry: number | null
-    licenseClass: string
-    vehicleType: string
+    national_id: string
+    picture: string
+    type: string
+    status: DriverStatus
+    duty_status: string
+    document_licence: string
+    document_national_icard: string
+    document_police_vertification: string
 }
 
 export interface UpdateDriverDTO {
-    firstName?: string
-    lastName?: string
-    email?: string
-    phone?: string
-    dateOfBirth?: number | null
-    address?: string
-    city?: string
-    state?: string
-    zipCode?: string
-    licenseNumber?: string
-    licenseExpiry?: number | null
-    licenseClass?: string
-    vehicleType?: string
-    status?: 'active' | 'inactive' | 'suspended'
+    operatorId?: string
+    firstname: string
+    lastname: string
+    short_name: string
+    email: string
+    country_code: string
+    phone: string
+    national_id: string
+    picture: string
+    type: string
+    status: DriverStatus
+    duty_status: string
+    document_licence: string
+    document_national_icard: string
+    document_police_vertification: string
 }
